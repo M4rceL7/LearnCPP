@@ -1,8 +1,8 @@
 -- premake5.lua
-workspace "New Project"
+workspace "LearnCPP"
    architecture "x64"
    configurations { "Debug", "Release", "Dist" }
-   startproject "App"
+   startproject "Main"
 
    -- Workspace-wide build options for MSVC
    filter "system:windows"
