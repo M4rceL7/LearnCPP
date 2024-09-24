@@ -17,8 +17,6 @@ void writeAnswer(int x)
     std::cout << "The sum is: " << x << '\n';
 }
 
-//Fundamental Data Types
-
 
 int main()
 {
@@ -39,7 +37,7 @@ int main()
 
     //ConstantsAndStrings::EnterTwoNames();
 
-    constexpr int maryApples { 3 };
+   /* constexpr int maryApples { 3 };
     std::cout << "Mary has " << ConstantsAndStrings::getQuantityPhrase(maryApples) << ' '
               << ConstantsAndStrings::getApplesPluralized(maryApples) << ".\n";
 
@@ -49,6 +47,7 @@ int main()
 
     std::cout << "You have " << ConstantsAndStrings::getQuantityPhrase(numApples) << ' '
               << ConstantsAndStrings::getApplesPluralized(numApples) << ".\n";
+              */
     
 	return 0;
 }
