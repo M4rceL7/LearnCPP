@@ -2,6 +2,9 @@
 
 namespace Core {
 
-	void PrintHelloWorld();
+	void InputTwoNumbers ();
+	void TimeForBallDrop ();
+	
+	
 
 }
