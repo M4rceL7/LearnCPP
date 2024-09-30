@@ -1,10 +1,56 @@
 #include <cassert>
 #include <iostream>
 #include <random>
-#include "Core/ConstantsAndStrings.h"
-#include "Core/Core.h"
+#include <algorithm>
+#include <format>
+#include <cmath>
+//#include "Core/ConstantsAndStrings.h"
+//#include "Core/Core.h"
 
-//Debuging
+
+//Try around
+
+class Log
+{
+    public:
+    
+    enum Level
+    {
+        LevelError, LevelWarning, LevelInfo
+    };
+    
+
+    private:
+
+    Level m_LogLevel = LevelInfo;
+        
+    public:
+
+    void setLogLevel(Level Level)
+    {
+        m_LogLevel = Level;
+    }
+
+    void ErrorM (const char* message)
+    {
+        if (m_LogLevel >= LevelError)
+            std::cout << "[ERROR] : " << message << '\n';
+    }
+
+    void WarnM (const char* message)
+    {
+        if (m_LogLevel >= LevelWarning)
+            std::cout << "[WARNING] : " << message << '\n';
+    }
+
+    void InfoM (const char* message)
+    {
+        if (m_LogLevel >= LevelInfo)
+            std::cout << "[INFO] : " << message << '\n';
+    }
+};
+
+//Debugging
 int readNumber()
 {
     std::cout << "Please enter a number: ";
@@ -122,11 +168,192 @@ void WantToContinueRGG ()
     }
 }
 
+//Function Overloading and Function Templates
 
-
-int main()
+template <typename T>
+T add(T x, T y)
 {
-//Debuging
+    return x + y;
+}
+
+template <typename T>
+T mult(T x, int y)
+{
+    return x * y;
+}
+
+template <typename T, typename U>
+auto sub (T x, U y)
+{
+    return x - y;
+}
+
+//Reference and Pointers
+
+void sort2 (int& lesser, int& greater) 
+{
+     if (greater >= lesser) return;
+
+    std::swap(lesser, greater);
+     
+}
+
+//Enums and Structs
+
+struct Monster
+{
+
+    enum Type
+    {
+        ogre,
+        dragon,
+        orc,
+        giant_spider,
+        slime,
+    };
+
+    Type type {};
+    std::string m_name {};
+    int m_health {};
+
+    
+    Monster(Type mtype ,std::string name, int health)
+    {
+        type = mtype;
+        m_name = name;
+        m_health = health;
+        
+    }
+    
+};
+
+constexpr std::string_view getMonsterTypeString(Monster::Type type)
+{
+    switch (type)
+    {
+    case Monster::ogre:          return "Ogre";
+    case Monster::dragon:        return "Dragon";
+    case Monster::orc:           return "Orc";
+    case Monster::giant_spider:  return "Giant Spider";
+    case Monster::slime:         return "Slime";
+    }
+
+    return "Unknown";
+}
+
+void printMonster (const Monster& monster)
+{
+    std::cout << "This "  << getMonsterTypeString(monster.type) <<
+        " is named " << monster.m_name << " and has " << monster.m_health << " HP.\n";
+} 
+
+template <typename T>
+class Triad
+{
+    public:
+    T first {};
+    T second {};
+    T third {};
+
+    Triad (T first, T second, T third )
+    {
+        this->first = first;
+        this->second = second;
+        this -> third = third;
+    }
+    
+};
+
+template <typename T>
+void print (const Triad<T>& triad)
+{
+    std::cout << "[ " << triad.first << ", " << triad.second << ", " << triad.third << " ]\n";    
+}
+
+//Classes
+
+class Point2d
+{
+public:
+    
+    double m_x {0.0};
+    double m_y {0.0};
+
+    Point2d () = default;
+
+    Point2d (double x, double y)
+        : m_x {x}, m_y {y}
+    {
+        
+    }
+
+    void print ()
+    {
+        std::cout << "( " << m_x << ", " << m_y << " )\n";
+    }
+
+    double distanceTo (const Point2d& point) const
+    {
+       return std::sqrt((m_x - point.m_x)*(m_x - point.m_x) +
+                            (m_y - point.m_y)*(m_y - point.m_y));
+    }
+};
+
+
+int main() /////////////////////////////////////////////////////////////////////////////////////
+{
+
+//Classes
+
+    Point2d first{};
+    Point2d second{ 3.0, 4.0 };
+
+    // Point2d third{ 4.0 }; // should error if uncommented
+
+    first.print();
+    second.print();
+
+    std::cout << "Distance between two points: " << first.distanceTo(second) << '\n';
+
+//Enums and Structs
+
+   /* Monster ogre = {Monster::ogre,"Ogre", 150};
+    Monster dragon = {Monster::dragon, "Dragon", 2000};
+    Monster slime = {Monster::slime, "Slimy", 2};
+    printMonster(ogre);
+    printMonster(dragon);
+    printMonster(slime); */
+
+    /*Triad t1{ 1, 2, 3 }; // note: uses CTAD to deduce template arguments
+    print(t1);
+
+    Triad t2{ 1.2, 3.4, 5.6 }; // note: uses CTAD to deduce template arguments
+    print(t2);*/    
+    
+//Reference and Pointers
+
+   /* int x { 7 };
+    int y { 5 };
+
+    std::cout << x << ' ' << y << '\n'; // should print 7 5
+
+    sort2(x, y); // make sure sort works when values need to be swapped
+    std::cout << x << ' ' << y << '\n'; // should print 5 7
+
+    sort2(x, y); // make sure sort works when values don't need to be swapped
+    std::cout << x << ' ' << y << '\n'; // should print 5 7*/
+//Function Overloading and Function Templates
+
+    /*std::cout << add(2, 3) << '\n';
+    std::cout << add(1.2, 3.4) << '\n';
+    std::cout << mult(2, 3) << '\n';
+    std::cout << mult(1.2, 3) << '\n';
+    std::cout << sub(3, 2) << '\n';
+    std::cout << sub(3.5, 2) << '\n';
+    std::cout << sub(4, 1.5) << '\n';*/
+
+    
+//Debugging
     /*
      int x { readNumber() };
      int y { readNumber() };
@@ -177,8 +404,17 @@ int main()
     std::cout << "Success!\n";*/
     
     //Control Flow RGG
-    RandomGuessGameRGG();
-    
+    //RandomGuessGameRGG();
+
+
+
+    //Try around
+
+    std::cout << "---------------------------------------Try Out Area------------------------------------------- \n ";
+    Log log;
+    log.setLogLevel(Log::LevelWarning);
+    log.WarnM("Warning");
+    std::cin.get();
     
     
 	return 0;
