@@ -15,6 +15,7 @@
 #include <random>
 #include <chrono>
 #include <vector>
+#include <array>
 
 
 using namespace std::string_literals;		//s suffix
@@ -815,22 +816,293 @@ namespace ExVec
 }
 
 
+namespace ExArr
+{
+	//Due to a language defect, the above functions will return a non - constexpr value when called on a std::array function parameter passed by(const) reference:
+	void printLength(const std::array<int, 5>& arr)
+	{
+		//constexpr int length{ std::size(arr) }; // compile error!
+		//std::cout << "length: " << length << '\n';
+	}
+	//This defect has been addressed in C++23 by P2280.At the time of writing, few compilers currently support this feature.
+	//A workaround is to make printLength() a function template where the array length is a non - type template parameter.This non - type template parameter can then be used inside the function.
+	template <auto Length>
+	void printLength(const std::array<int, Length>& arr)
+	{
+		std::cout << "length: " << Length << '\n';
+	}
+
+	template <typename T, auto/*std::size_t*/ N> // note that this template parameter declaration matches the one for std::array
+	void passByRef(const std::array<T, N>& arr)
+	{
+		static_assert(N != 0); // fail if this is a zero-length std::array
+
+		std::cout << std::get<0>(arr) << '\n';
+	}
+
+	template <typename T, auto N>
+	void printArray(const std::array<T, N>& arr)
+	{
+		static_assert(N != 0);
+
+		std::cout << "The array (";
+		for (int index{ 0 }; index <= std::ssize(arr) - 2; ++index)
+		{
+			std::cout << arr[index] << ", ";
+		}
+
+		std::cout << arr[std::ssize(arr) - 1] << ") has length " << std::ssize(arr) << '\n';
+	}
+
+	struct Item
+	{
+		std::string_view name{};
+		int gold{};
+	};
+
+	template <auto N>
+	void printStore(const std::array<Item, N>& arr)
+	{
+		for (const auto& item : arr)
+		{
+			std::cout << "A " << item.name << " costs " << item.gold << " gold.\n";
+		}
+	}
 
 
+	namespace Color
+	{
+		enum Type
+		{
+			black,
+			red,
+			blue,
+			max_colors
+		};
+
+		// use sv suffix so std::array will infer type as std::string_view
+		using namespace std::string_view_literals; // for sv suffix
+		constexpr std::array colorName{ "black"sv, "red"sv, "blue"sv };
+
+		// Make sure we've defined strings for all our colors
+		static_assert(std::size(colorName) == max_colors);
+	};
+
+	constexpr std::string_view getColorName(Color::Type color)
+	{
+		// We can index the array using the enumerator to get the name of the enumerator
+		return Color::colorName[static_cast<std::size_t>(color)];
+	}
+
+	// Teach operator<< how to print a Color
+	// std::ostream is the type of std::cout
+	// The return type and parameter type are references (to prevent copies from being made)!
+	std::ostream& operator<<(std::ostream& out, Color::Type color)
+	{
+		return out << getColorName(color);
+	}
+
+	// Teach operator>> how to input a Color by name
+	// We pass color by non-const reference so we can have the function modify its value
+	std::istream& operator>> (std::istream& in, Color::Type& color)
+	{
+		std::string input{};
+		std::getline(in >> std::ws, input);
+
+		// Iterate through the list of names to see if we can find a matching name
+		for (std::size_t index = 0; index < Color::colorName.size(); ++index)
+		{
+			if (input == Color::colorName[index])
+			{
+				// If we found a matching name, we can get the enumerator value based on its index
+				color = static_cast<Color::Type>(index);
+				return in;
+			}
+		}
+
+		// We didn't find a match, so input must have been invalid
+		// so we will set input stream to fail state
+		in.setstate(std::ios_base::failbit);
+
+		// On an extraction failure, operator>> zero-initializes fundamental types
+		// Uncomment the following line to make this operator do the same thing
+		// color = {};
+		return in;
+	}
+
+
+	namespace Animal
+	{
+		enum Type
+		{
+			chicken,
+			dog,
+			cat,
+			elephant,
+			duck,
+			snake,
+			max_animals
+		};
+
+		struct Data
+		{
+			std::string_view name{};
+			int numLegs{};
+			std::string_view sound{};
+		};
+
+		constexpr std::array types{ chicken, dog, cat, elephant, duck, snake };
+		constexpr std::array data{ 
+			Data{ "chicken",    2, "cluck" },
+			Data{ "dog",        4, "woof" },
+			Data{ "cat",        4, "meow" },
+			Data{ "elephant",   4, "pawoo" },
+			Data{ "duck",       2, "quack" },
+			Data{ "snake",      0, "hissss" }, };
+
+		static_assert(std::size(types) == max_animals);
+		static_assert(std::size(data) == max_animals);
+	}
+
+	std::istream& operator>> (std::istream& in, Animal::Type& animal)
+	{
+		std::string input{};
+		std::getline(in >> std::ws, input);
+
+		for (int index{ 0 }; index < std::ssize(Animal::data); ++index)
+		{
+			if (input == Animal::data[index].name)
+			{
+				animal = static_cast<Animal::Type>(index);
+				return in;
+			}
+		}
+
+		in.setstate(std::ios_base::failbit);
+		return in;
+	}
+
+	void printAnimalData(Animal::Type type)
+	{
+		const Animal::Data& animal{ Animal::data[type] };
+		std::cout << "A " << animal.name << " has " << animal.numLegs << " legs and says " << animal.sound << ".\n";
+	}
+
+	void printCStyle(const char arr[])
+	{
+		while (*arr != '\0')
+		{
+			std::cout << *arr;
+
+			++arr;
+		}
+	}
+
+	void printCStyleReverse(const char str[])
+	{
+		const char* ptr{ str };
+
+		while (*ptr != '\0')
+		{
+			++ptr;
+		}
+
+		while (ptr-- != str)
+		{
+			std::cout << *ptr;
+		}
+	}
+
+	void exampleMultiCArray()
+	{
+		int arr[3][4]{
+			   { 1, 2, 3, 4 },
+			   { 5, 6, 7, 8 },
+			   { 9, 10, 11, 12 } };
+
+		// double for-loop with indices
+		for (std::size_t row{ 0 }; row < std::size(arr); ++row) // std::size(arr) returns the number of rows
+		{
+			for (std::size_t col{ 0 }; col < std::size(arr[0]); ++col) // std::size(arr[0]) returns the number of columns
+				std::cout << arr[row][col] << ' ';
+
+			std::cout << '\n';
+		}
+
+		// double range-based for-loop
+		for (const auto& arow : arr)   // get each array row
+		{
+			for (const auto& e : arow) // get each element of the row
+				std::cout << e << ' ';
+
+			std::cout << '\n';
+		}
+	}
+
+	// An alias template for a two-dimensional std::array
+	template <typename T, std::size_t Row, std::size_t Col>
+	using Array2d = std::array<std::array<T, Col>, Row>;
+
+	// When using Array2d as a function parameter, we need to respecify the template parameters
+	template <typename T, std::size_t Row, std::size_t Col>
+	void printArray(const Array2d<T, Row, Col>& arr)
+	{
+		for (const auto& arow : arr)   // get each array row
+		{
+			for (const auto& e : arow) // get each element of the row
+				std::cout << e << ' ';
+
+			std::cout << '\n';
+		}
+	}
+
+	// Fetch the number of rows from the Row non-type template parameter
+	template <typename T, std::size_t Row, std::size_t Col>
+	constexpr int rowLength(const Array2d<T, Row, Col>&) // you can return std::size_t if you prefer
+	{
+		return Row;
+	}
+
+	// Fetch the number of cols from the Col non-type template parameter
+	template <typename T, std::size_t Row, std::size_t Col>
+	constexpr int colLength(const Array2d<T, Row, Col>&) // you can return std::size_t if you prefer
+	{
+		return Col;
+	}
+
+	// An alias template for a three-dimensional std::array
+	template <typename T, std::size_t Row, std::size_t Col, std::size_t Depth>
+	using Array3d = std::array<std::array<std::array<T, Depth>, Col>, Row>;
+
+	//More on turning a Multidimensional Array into a one-dia array can be found here (https://www.learncpp.com/cpp-tutorial/multidimensional-stdarray/)
+	
+}
+
+//---------------------MAIN------------------------------------------------
+//-------------------------------------------------------------------------
 int main()
 {
 	namespace CTL = CppLearningTest;
 
-	std::vector data1{ 84, 92, 76, 81, 56 };
-	std::cout << ExVec::findMax(data1) << '\n';
-
-	std::vector data2{ -13.0, -26.7, -105.5, -14.8 };
-	std::cout << ExVec::findMax(data2) << '\n';
-
-	std::vector<int> data3{ };
-	std::cout << ExVec::findMax(data3) << '\n';
+	
 
 	return 0;
+
+	if (!std::cin) // handle bad input
+	{
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		//continue;
+	}
+
+	/*std::array hello{ 'H','e', 'l', 'l', 'o' };
+	std::cout << "Length: " << hello.size();
+	std::cout << "\n" << hello[1] << hello.at(1) << std::get<1>(hello);*/
+
+	//constexpr std::array prime{ 2, 3, 5, 7, 11 };
+
+	//std::cout << std::get<3>(prime); // print the value of element with index 3
+	//std::cout << std::get<9>(prime); // invalid index (compile error)
 
 	//std::vector arr{ 9, 7, 5, 3, 1 };
 
@@ -917,6 +1189,39 @@ int main()
 	const int* ptr1{ &v };       // points to a "const int" but is not const itself.  We can only modify the address.
 	int* const ptr2{ &v };       // points to an "int" and is const itself.   We can only modify the value.
 	const int* const ptr3{ &v }; // points to a "const int" and is const itself.  We can't modify the value nor the address.
+
+	//As a neat bit of trivia, because the compiler converts ptr[n] into* ((ptr)+(n)) when subscripting a pointer, 
+	//this means we can also subscript a pointer as n[ptr]!The compiler converts this into* ((n)+(ptr)), 
+	//which is behaviorally identical to* ((ptr)+(n)).Don’t actually do this though, as it’s confusing.
+
+	constexpr int arr[]{ 9, 7, 5, 3, 1 };
+
+	const int* begin{ arr };                // begin points to start element
+	const int* end{ arr + std::size(arr) }; // end points to one-past-the-end element
+
+	for (; begin != end; ++begin)           // iterate from begin up to (but excluding) end
+	{
+		std::cout << *begin << ' ';     // dereference our loop variable to get the current element
+	}
+
+	//void printArray(const int* begin, const int* end)
+	//{
+	//	for (; begin != end; ++begin)   // iterate from begin up to (but excluding) end
+	//	{
+	//		std::cout << *begin << ' '; // dereference our loop variable to get the current element
+	//	}
+
+	//	std::cout << '\n';
+	//}
+
+	//int main()
+	//{
+	//	constexpr int arr[]{ 9, 7, 5, 3, 1 };
+
+	//	const int* begin{ arr };                // begin points to start element
+	//	const int* end{ arr + std::size(arr) }; // end points to one-past-the-end element
+
+	//	printArray(begin, end);
 
 
 	PRINTVCAT(5);        // rvalue

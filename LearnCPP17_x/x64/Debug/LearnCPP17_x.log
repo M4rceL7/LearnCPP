@@ -1,0 +1,4 @@
+﻿  main.cpp
+G:\Projects\LearnCPP\LearnCPP17_x\main.cpp(307,1): warning C4715: 'playerTurn': not all control paths return a value
+G:\Projects\LearnCPP\LearnCPP17_x\main.cpp(72,1): warning C4715: 'Player::addToInventory': not all control paths return a value
+  LearnCPP17_x.vcxproj -> G:\Projects\LearnCPP\LearnCPP\x64\Debug\LearnCPP17_x.exe

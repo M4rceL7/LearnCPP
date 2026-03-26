@@ -3,7 +3,7 @@
   "WorkspaceRootPath": "G:\\Projects\\LearnCPP\\LearnCPP\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{FF0F5D3F-EB3A-49F5-81A5-61ABC7877CBD}|..\\LearnCPP16_x\\LearnCPP16_x.vcxproj|G:\\Projects\\LearnCPP\\LearnCPP16_x\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{33DE91A6-4187-4B7B-AA8B-7BD51CA90B3C}|..\\LearnCPP17_x\\LearnCPP17_x.vcxproj|G:\\Projects\\LearnCPP\\LearnCPP17_x\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{936DB939-72AF-4868-AD4B-2C40CBA6E9F9}|LearnCPP.vcxproj|G:\\Projects\\LearnCPP\\LearnCPP\\LearnCPP.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -27,22 +27,23 @@
               "RelativeDocumentMoniker": "LearnCPP.cpp",
               "ToolTip": "G:\\Projects\\LearnCPP\\LearnCPP\\LearnCPP.cpp",
               "RelativeToolTip": "LearnCPP.cpp",
-              "ViewState": "AgIAAM8CAAAAAAAAAAAAABUCAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACkEAAAAAAAAAAAiwEIEAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-10-01T15:51:10.886Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "main.cpp",
-              "DocumentMoniker": "G:\\Projects\\LearnCPP\\LearnCPP16_x\\main.cpp",
-              "RelativeDocumentMoniker": "..\\LearnCPP16_x\\main.cpp",
-              "ToolTip": "G:\\Projects\\LearnCPP\\LearnCPP16_x\\main.cpp",
-              "RelativeToolTip": "..\\LearnCPP16_x\\main.cpp",
-              "ViewState": "AgIAAFcAAAAAAAAAAAAAAG4AAAAoAAAAAAAAAA==",
+              "DocumentMoniker": "G:\\Projects\\LearnCPP\\LearnCPP17_x\\main.cpp",
+              "RelativeDocumentMoniker": "..\\LearnCPP17_x\\main.cpp",
+              "ToolTip": "G:\\Projects\\LearnCPP\\LearnCPP17_x\\main.cpp",
+              "RelativeToolTip": "..\\LearnCPP17_x\\main.cpp",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAAJ4AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-03-20T14:09:01.114Z",
+              "WhenOpened": "2026-03-25T16:35:53.646Z",
               "EditorCaption": ""
             }
           ]
