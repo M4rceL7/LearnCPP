@@ -16,6 +16,7 @@
 #include <chrono>
 #include <vector>
 #include <array>
+#include <functional>
 
 
 using namespace std::string_literals;		//s suffix
@@ -1078,12 +1079,243 @@ namespace ExArr
 	
 }
 
+
+namespace DynamicAlloc
+{
+	std::size_t getNameCount()
+	{
+		std::cout << "How many names would you like to enter? ";
+		std::size_t length{};
+		std::cin >> length;
+
+		return length;
+	}
+
+	// Asks user to enter all the names
+	void getNames(std::string* names, std::size_t length)
+	{
+		for (std::size_t i{ 0 }; i < length; ++i)
+		{
+			std::cout << "Enter name #" << i + 1 << ": ";
+			std::getline(std::cin >> std::ws, names[i]);
+		}
+	}
+
+	// Prints the sorted names
+	void printNames(std::string* names, std::size_t length)
+	{
+		std::cout << "\nHere is your sorted list:\n";
+
+		for (std::size_t i{ 0 }; i < length; ++i)
+			std::cout << "Name #" << i + 1 << ": " << names[i] << '\n';
+	}
+
+	//std::size_t length{ getNameCount() };
+	//
+	//// Allocate an array to hold the names
+	//auto* names{ new std::string[length]{} };
+	//
+	//getNames(names, length);
+	//
+	//// Sort the array
+	//std::sort(names, names + length);
+	//
+	//printNames(names, length);
+	//
+	//// don't forget to use array delete
+	//delete[] names;
+	//// we don't need to set names to nullptr/0 here because it's going to go out
+	//// of scope immediately after this anyway.
+
+}
+
+namespace FunctionPointer
+{
+	// Note our user-defined comparison is the third parameter
+	void selectionSort(int* array, int size, bool (*comparisonFcn)(int, int))
+	{
+		if (!array || !comparisonFcn)
+			return;
+
+		// Step through each element of the array
+		for (int startIndex{ 0 }; startIndex < (size - 1); ++startIndex)
+		{
+			// bestIndex is the index of the smallest/largest element we've encountered so far.
+			int bestIndex{ startIndex };
+
+			// Look for smallest/largest element remaining in the array (starting at startIndex+1)
+			for (int currentIndex{ startIndex + 1 }; currentIndex < size; ++currentIndex)
+			{
+				// If the current element is smaller/larger than our previously found smallest
+				if (comparisonFcn(array[bestIndex], array[currentIndex])) // COMPARISON DONE HERE
+				{
+					// This is the new smallest/largest number for this iteration
+					bestIndex = currentIndex;
+				}
+			}
+
+			// Swap our start element with our smallest/largest element
+			std::swap(array[startIndex], array[bestIndex]);
+		}
+	}
+
+	// Here is a comparison function that sorts in ascending order
+	// (Note: it's exactly the same as the previous ascending() function)
+	bool ascending(int x, int y)
+	{
+		return x > y; // swap if the first element is greater than the second
+	}
+
+	// Here is a comparison function that sorts in descending order
+	bool descending(int x, int y)
+	{
+		return x < y; // swap if the second element is greater than the first
+	}
+
+	// This function prints out the values in the array
+	void printArray(int* array, int size)
+	{
+		if (!array)
+			return;
+
+		for (int index{ 0 }; index < size; ++index)
+		{
+			std::cout << array[index] << ' ';
+		}
+
+		std::cout << '\n';
+	}
+
+	//int main()
+	//{
+	//	int array[9]{ 3, 7, 9, 5, 6, 1, 8, 2, 4 };
+
+	//	// Sort the array in descending order using the descending() function
+	//	selectionSort(array, 9, descending);
+	//	printArray(array, 9);
+
+	//	// Sort the array in ascending order using the ascending() function
+	//	selectionSort(array, 9, ascending);
+	//	printArray(array, 9);
+
+	//	return 0;
+	//}
+
+	// Default the sort to ascending sort
+	void selectionSort_t(int* array, int size, bool (*comparisonFcn)(int, int) = ascending);
+
+	using ValidateFunction = bool(*)(int, int);
+	bool validate(int x, int y, bool (*fcnPtr)(int, int)); // ugly
+	bool validate(int x, int y, ValidateFunction pfcn); // clean
+
+	//#include <functional>
+	bool validate(int x, int y, std::function<bool(int, int)> fcn); // std::function method that returns a bool and takes two int parameters
+}
+
+namespace Calculator
+{
+	using ArithmeticFunction = std::function<int(int, int)>;
+
+	int getNumber()
+	{
+		static int count{ 1 };
+		std::cout << "Number " << count << ": ";
+		int num{};
+		std::cin >> num;
+		std::cout << '\n';
+		return num;
+	}
+
+	char getOperator()
+	{
+		while (true)
+		{
+			std::cout << "Operator (+|-|/|*): ";
+			char op{};
+			std::cin >> op;
+			std::cout << '\n';
+
+			if (op == '+')
+			{
+				return op;
+			}
+			if (op == '-')
+			{
+				return op;
+			}
+			if (op == '*')
+			{
+				return op;
+			}
+			if (op == '/')
+			{
+				return op;
+			}
+			std::cout << "Wrong input, try again: ";
+
+		}
+	}
+
+	int add(int num1, int num2)
+	{
+		return num1 + num2;
+	}
+
+	int subtract(int num1, int num2)
+	{
+		return num1 - num2;
+	}
+
+	int multiply(int num1, int num2)
+	{
+		return num1 * num2;
+	}
+
+	int divide(int num1, int num2)
+	{
+		return num1 / num2;
+	}
+
+	ArithmeticFunction getArithmeticFunction(char op)
+	{
+		switch (op)
+		{
+		case '+':
+			return &add;
+		case '-':
+			return &subtract;
+		case '*':
+			return &multiply;
+		case '/':
+			return &divide;
+		}
+
+		return nullptr;
+	}
+
+	/*int num1{ Calculator::getNumber() };
+	int num2{ Calculator::getNumber() };
+	char op{ Calculator::getOperator() };
+
+	Calculator::ArithmeticFunction fcn{ Calculator::getArithmeticFunction(op) };
+	if (fcn)
+	{
+		std::cout << num1 << ' ' << op << ' ' << num2 << " = " << fcn(num1, num2) << '\n';
+	}*/
+}
+
+
+
+
 //---------------------MAIN------------------------------------------------
 //-------------------------------------------------------------------------
 int main()
 {
 	namespace CTL = CppLearningTest;
+	
+	
 
+	
 	
 
 	return 0;
@@ -1094,6 +1326,50 @@ int main()
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		//continue;
 	}
+
+	int(*fncpt)(int, int) = nullptr;//FunctionPointer
+
+	//int array[]{ 1, 2, 3, 9, 7, 6, 5, 4, 8 };
+	//constexpr int length{ static_cast<int>(std::size(array)) }; // C++17
+	////  constexpr int length{ sizeof(array) / sizeof(array[0]) }; // use instead if not C++17 capable
+
+	//	// Step through each element of the array except the last
+	//for (int iteration{ 0 }; iteration < length - 1; ++iteration)
+	//{
+	//	// Account for the fact that the last element is already sorted with each subsequent iteration
+	//	// so our array "ends" one element sooner
+	//	int endOfArrayIndex{ length - iteration };
+
+	//	bool swapped{ false }; // Keep track of whether any elements were swapped this iteration
+
+	//	// Search through all elements up to the end of the array - 1
+	//	// The last element has no pair to compare against
+	//	for (int currentIndex{ 0 }; currentIndex < endOfArrayIndex - 1; ++currentIndex)
+	//	{
+	//		// If the current element is larger than the element after it
+	//		if (array[currentIndex] > array[currentIndex + 1])
+	//		{
+	//			// Swap them
+	//			std::swap(array[currentIndex], array[currentIndex + 1]);
+	//			swapped = true;
+	//		}
+	//	}
+
+	//	// If we haven't swapped any elements this iteration, we're done early
+	//	if (!swapped)
+	//	{
+	//		// iteration is 0 based, but counting iterations is 1-based.  So add 1 here to adjust.
+	//		std::cout << "Early termination on iteration: " << iteration + 1 << '\n';
+	//		break;
+	//	}
+	//}
+
+	//// Now print our sorted array as proof it works
+	//for (int index{ 0 }; index < length; ++index)
+	//	std::cout << array[index] << ' ';
+
+	//std::cout << '\n';
+
 
 	/*std::array hello{ 'H','e', 'l', 'l', 'o' };
 	std::cout << "Length: " << hello.size();
