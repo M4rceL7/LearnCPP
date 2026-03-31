@@ -1305,6 +1305,189 @@ namespace Calculator
 }
 
 
+namespace Lambda
+{
+	//Function literal or Lambda used in function call.
+	/*
+	constexpr std::array<std::string_view, 4> arr{ "apple", "banana", "walnut", "lemon" };
+
+  // Define the function right where we use it.
+  auto found{ std::find_if(arr.begin(), arr.end(),
+                           [](std::string_view str) // here's our lambda, no capture clause
+                           {
+                             return str.find("nut") != std::string_view::npos;
+                           }) };
+
+  if (found == arr.end())
+  {
+    std::cout << "No nuts\n";
+  }
+  else
+  {
+    std::cout << "Found " << *found << '\n';
+  }
+	*/
+
+	// Bad: We have to read the lambda to understand what's happening.
+	/*return std::all_of(array.begin(), array.end(), [](int i) { return ((i % 2) == 0); });*/
+
+	// Good: Instead, we can store the lambda in a named variable and pass it to the function.
+	/*auto isEven{
+	  [](int i)
+	  {
+		return (i % 2) == 0;
+	  }
+	};
+
+	return std::all_of(array.begin(), array.end(), isEven);*/
+
+	/*
+	#include <functional>
+#include <iostream>
+
+// Case 1: use a `std::function` parameter
+void repeat1(int repetitions, const std::function<void(int)>& fn)
+{
+    for (int i{ 0 }; i < repetitions; ++i)
+        fn(i);
+}
+
+// Case 2: use a function template with a type template parameter
+template <typename T>
+void repeat2(int repetitions, const T& fn)
+{
+    for (int i{ 0 }; i < repetitions; ++i)
+        fn(i);
+}
+
+// Case 3: use the abbreviated function template syntax (C++20)
+void repeat3(int repetitions, const auto& fn)
+{
+    for (int i{ 0 }; i < repetitions; ++i)
+        fn(i);
+}
+
+// Case 4: use function pointer (only for lambda with no captures)
+void repeat4(int repetitions, void (*fn)(int))
+{
+    for (int i{ 0 }; i < repetitions; ++i)
+        fn(i);
+}
+
+int main()
+{
+    auto lambda = [](int i)
+    {
+        std::cout << i << '\n';
+    };
+
+    repeat1(3, lambda);
+    repeat2(3, lambda);
+    repeat3(3, lambda);
+    repeat4(3, lambda);
+
+    return 0;
+}
+	*/
+
+	/*
+	 int ammo{ 10 };
+
+  auto shoot{
+    [ammo]() mutable { // now mutable
+      // We're allowed to modify ammo now
+      --ammo;
+
+      std::cout << "Pew! " << ammo << " shot(s) left.\n";
+    }
+  };
+
+  shoot();
+  shoot();
+
+  std::cout << ammo << " shot(s) left\n";
+
+  return 0;
+	*/
+	/*
+	 int ammo{ 10 };
+
+	  auto shoot{
+		// We don't need mutable anymore
+		[&ammo]() { // &ammo means ammo is captured by reference
+		  // Changes to ammo will affect main's ammo
+		  --ammo;
+
+		  std::cout << "Pew! " << ammo << " shot(s) left.\n";
+		}
+	  };
+
+	  shoot();
+
+	  std::cout << ammo << " shot(s) left\n";
+	  */
+
+	/*
+	int health{ 33 };
+	int armor{ 100 };
+	std::vector<CEnemy> enemies{};
+
+	// Capture health and armor by value, and enemies by reference.
+	[health, armor, &enemies](){};
+	*/
+
+/*
+ std::array areas{ 100, 25, 121, 40, 56 };
+
+  int width{};
+  int height{};
+
+  std::cout << "Enter width and height: ";
+  std::cin >> width >> height;
+
+  auto found{ std::find_if(areas.begin(), areas.end(),
+						   [=](int knownArea) { // will default capture width and height by value
+							 return width * height == knownArea; // because they're mentioned here
+						   }) };
+
+  if (found == areas.end())
+  {
+	std::cout << "I don't know this area :(\n";
+  }
+  else
+  {
+	std::cout << "Area found :)\n";
+  }
+*/
+
+/*
+int health{ 33 };
+int armor{ 100 };
+std::vector<CEnemy> enemies{};
+
+// Capture health and armor by value, and enemies by reference.
+[health, armor, &enemies](){};
+
+// Capture enemies by reference and everything else by value.
+[=, &enemies](){};
+
+// Capture armor by value and everything else by reference.
+[&, armor](){};
+
+// Illegal, we already said we want to capture everything by reference.
+[&, &armor](){};
+
+// Illegal, we already said we want to capture everything by value.
+[=, armor](){};
+
+// Illegal, armor appears twice.
+[armor, &health, &armor](){};
+
+// Illegal, the default capture has to be the first element in the capture group.
+[armor, &](){};
+*/
+}
+
 
 
 //---------------------MAIN------------------------------------------------
@@ -1313,10 +1496,7 @@ int main()
 {
 	namespace CTL = CppLearningTest;
 	
-	
 
-	
-	
 
 	return 0;
 
