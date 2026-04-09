@@ -5,6 +5,9 @@
 #include "5xe.h"
 #include "6xe.h"
 #include "8xe.h"
+#include "Creature.h"
+#include "Point2D.h"
+
 #include <iostream>
 #include <iomanip>
 #include <climits>
@@ -17,6 +20,7 @@
 #include <vector>
 #include <array>
 #include <functional>
+#include <memory>
 
 
 using namespace std::string_literals;		//s suffix
@@ -1202,14 +1206,14 @@ namespace FunctionPointer
 	//}
 
 	// Default the sort to ascending sort
-	void selectionSort_t(int* array, int size, bool (*comparisonFcn)(int, int) = ascending);
-
-	using ValidateFunction = bool(*)(int, int);
-	bool validate(int x, int y, bool (*fcnPtr)(int, int)); // ugly
-	bool validate(int x, int y, ValidateFunction pfcn); // clean
-
-	//#include <functional>
-	bool validate(int x, int y, std::function<bool(int, int)> fcn); // std::function method that returns a bool and takes two int parameters
+//	void selectionSort_t(int* array, int size, bool (*comparisonFcn)(int, int) = ascending);
+//
+//	using ValidateFunction = bool(*)(int, int);
+//	bool validate(int x, int y, bool (*fcnPtr)(int, int)); // ugly
+//	bool validate(int x, int y, ValidateFunction pfcn); // clean
+//
+//	//#include <functional>
+//	bool validate(int x, int y, std::function<bool(int, int)> fcn); // std::function method that returns a bool and takes two int parameters
 }
 
 namespace Calculator
@@ -1487,6 +1491,658 @@ std::vector<CEnemy> enemies{};
 [armor, &](){};
 */
 }
+
+
+namespace SmartPointers
+{
+
+	template <typename T>
+	class Auto_ptr2
+	{
+		T* m_ptr{};
+	public:
+		Auto_ptr2(T* ptr = nullptr)
+			:m_ptr(ptr)
+		{
+		}
+
+		~Auto_ptr2()
+		{
+			delete m_ptr;
+		}
+
+		// A copy constructor that implements move semantics
+		Auto_ptr2(Auto_ptr2& a) // note: not const
+		{
+			// We don't need to delete m_ptr here.  This constructor is only called when we're creating a new object, and m_ptr can't be set prior to this.
+			m_ptr = a.m_ptr; // transfer our dumb pointer from the source to our local object
+			a.m_ptr = nullptr; // make sure the source no longer owns the pointer
+		}
+
+		// An assignment operator that implements move semantics
+		Auto_ptr2& operator=(Auto_ptr2& a) // note: not const
+		{
+			if (&a == this)
+				return *this;
+
+			delete m_ptr; // make sure we deallocate any pointer the destination is already holding first
+			m_ptr = a.m_ptr; // then transfer our dumb pointer from the source to the local object
+			a.m_ptr = nullptr; // make sure the source no longer owns the pointer
+			return *this;
+		}
+
+		T& operator*() const { return *m_ptr; }
+		T* operator->() const { return m_ptr; }
+		bool isNull() const { return m_ptr == nullptr; }
+	};
+
+	class Resource
+	{
+	public:
+		Resource() { std::cout << "Resource acquired\n"; }
+		~Resource() { std::cout << "Resource destroyed\n"; }
+	};
+
+	//int main()
+	//{
+	//	Auto_ptr2<Resource> res1(new Resource());
+	//	Auto_ptr2<Resource> res2; // Start as nullptr
+
+	//	std::cout << "res1 is " << (res1.isNull() ? "null\n" : "not null\n");
+	//	std::cout << "res2 is " << (res2.isNull() ? "null\n" : "not null\n");
+
+	//	res2 = res1; // res2 assumes ownership, res1 is set to null
+
+	//	std::cout << "Ownership transferred\n";
+
+	//	std::cout << "res1 is " << (res1.isNull() ? "null\n" : "not null\n");
+	//	std::cout << "res2 is " << (res2.isNull() ? "null\n" : "not null\n");
+
+	//	return 0;
+	//}
+
+	struct Student
+	{
+		std::string_view name{};
+		int points{};
+	};
+
+//	int main()
+//	{
+//		constexpr std::array<Student, 8> arr{
+//		  { { "Albert", 3 },
+//			{ "Ben", 5 },
+//			{ "Christine", 2 },
+//			{ "Dan", 8 },
+//			{ "Enchilada", 4 },
+//			{ "Francis", 1 },
+//			{ "Greg", 3 },
+//			{ "Hagrid", 5 } }
+//		};
+//
+//		const auto best{ // returns an iterator
+//		  std::max_element(arr.begin(), arr.end(), [](const auto& a, const auto& b)
+//	   {
+//	return a.points < b.points;
+//	})
+//		};
+//
+//		std::cout << best->name << " is the best student\n"; // must dereference iterator to get element
+//
+//		return 0;
+//	}
+
+	struct Season
+	{
+		std::string_view name{};
+		double averageTemperature{};
+	};
+
+	//int main()
+	//{
+	//	std::array<Season, 4> seasons{
+	//	  { { "Spring", 285.0 },
+	//		{ "Summer", 296.0 },
+	//		{ "Fall", 288.0 },
+	//		{ "Winter", 263.0 } }
+	//	};
+
+	//	// We can compare averageTemperature of the two arguments to
+	//	// sort the array.
+	//	std::sort(seasons.begin(), seasons.end(),
+	//		[](const auto& a, const auto& b)
+	//		{
+	//			return a.averageTemperature < b.averageTemperature;
+	//		});
+
+	//	for (const auto& season : seasons)
+	//	{
+	//		std::cout << season.name << '\n';
+	//	}
+
+	//	return 0;
+	//}
+}
+
+int factorial(int n)
+{
+	if (n <= 0)
+		return 1;
+
+	return factorial(n - 1) * n;
+}
+
+int sumDigits(int x)
+{
+	if (x < 10)
+		return x;
+
+	return sumDigits(x / 10) + x % 10;
+}
+
+void printBinary(unsigned int n)
+{
+	if (n > 1) // we only recurse if n > 1, so this is our termination case for n == 0
+	{
+		printBinary(n / 2);
+	}
+
+	std::cout << n % 2;
+}
+
+namespace RValueReference
+{
+	void fun(const int& lref) // l-value arguments will select this function
+	{
+		std::cout << "l-value reference to const: " << lref << '\n';
+	}
+
+	void fun(int&& rref) // r-value arguments will select this function
+	{
+		std::cout << "r-value reference: " << rref << '\n';
+	}
+
+	//int main()
+	//{
+	//	int x{ 5 };
+	//	fun(x); // l-value argument calls l-value version of function
+	//	fun(5); // r-value argument calls r-value version of function
+
+	//	return 0;
+	//}
+
+	//__________________std::unique_ptr______________________________
+	class Resource
+	{
+	public:
+		Resource() { std::cout << "Resource acquired\n"; }
+		~Resource() { std::cout << "Resource destroyed\n"; }
+	};
+
+	//int main()
+	//{
+	//	std::unique_ptr<Resource> res1{ new Resource{} }; // Resource created here
+	//	std::unique_ptr<Resource> res2{}; // Start as nullptr
+
+	//	std::cout << "res1 is " << (res1 ? "not null\n" : "null\n");
+	//	std::cout << "res2 is " << (res2 ? "not null\n" : "null\n");
+
+	//	// res2 = res1; // Won't compile: copy assignment is disabled
+	//	res2 = std::move(res1); // res2 assumes ownership, res1 is set to null
+
+	//	std::cout << "Ownership transferred\n";
+
+	//	std::cout << "res1 is " << (res1 ? "not null\n" : "null\n");
+	//	std::cout << "res2 is " << (res2 ? "not null\n" : "null\n");
+
+	//	return 0;
+	//} // Resource destroyed here when res2 goes out of scope
+
+	class Fraction
+	{
+	private:
+		int m_numerator{ 0 };
+		int m_denominator{ 1 };
+
+	public:
+		Fraction(int numerator = 0, int denominator = 1) :
+			m_numerator{ numerator }, m_denominator{ denominator }
+		{
+		}
+
+		friend std::ostream& operator<<(std::ostream& out, const Fraction& f1)
+		{
+			out << f1.m_numerator << '/' << f1.m_denominator;
+			return out;
+		}
+	};
+
+
+	//int main()
+	//{
+	//	// Create a single dynamically allocated Fraction with numerator 3 and denominator 5
+	//	// We can also use automatic type deduction to good effect here
+	//	auto f1{ std::make_unique<Fraction>(3, 5) };
+	//	std::cout << *f1 << '\n';
+
+	//	// Create a dynamically allocated array of Fractions of length 4
+	//	auto f2{ std::make_unique<Fraction[]>(4) };
+	//	std::cout << f2[0] << '\n';
+
+	//	return 0;
+	//}
+	//Use std::make_unique() instead of creating std::unique_ptr and using new yourself. --> exception safe issue fixed in c++17
+
+	//class Resource
+	//{
+	//public:
+	//	Resource() { std::cout << "Resource acquired\n"; }
+	//	~Resource() { std::cout << "Resource destroyed\n"; }
+	//};
+
+	//std::ostream& operator<<(std::ostream& out, const Resource&)
+	//{
+	//	out << "I am a resource";
+	//	return out;
+	//}
+
+	//// This function takes ownership of the Resource, which isn't what we want
+	//void takeOwnership(std::unique_ptr<Resource> res)
+	//{
+	//	if (res)
+	//		std::cout << *res << '\n';
+	//} // the Resource is destroyed here
+
+	//int main()
+	//{
+	//	auto ptr{ std::make_unique<Resource>() };
+
+	//	//    takeOwnership(ptr); // This doesn't work, need to use move semantics
+	//	takeOwnership(std::move(ptr)); // ok: use move semantics
+
+	//	std::cout << "Ending program\n";
+
+	//	return 0;
+	//}
+
+	//class Resource
+	//{
+	//public:
+	//	Resource() { std::cout << "Resource acquired\n"; }
+	//	~Resource() { std::cout << "Resource destroyed\n"; }
+	//};
+
+	//std::ostream& operator<<(std::ostream& out, const Resource&)
+	//{
+	//	out << "I am a resource";
+	//	return out;
+	//}
+
+	//// The function only uses the resource, so we'll accept a pointer to the resource, not a reference to the whole std::unique_ptr<Resource>
+	//void useResource(const Resource* res)
+	//{
+	//	if (res)
+	//		std::cout << *res << '\n';
+	//	else
+	//		std::cout << "No resource\n";
+	//}
+
+	//int main()
+	//{
+	//	auto ptr{ std::make_unique<Resource>() };
+
+	//	useResource(ptr.get()); // note: get() used here to get a pointer to the Resource
+
+	//	std::cout << "Ending program\n";
+
+	//	return 0;
+	//} // The Resource is destroyed here
+
+	//_________________________std::shared_ptr_____________________________________________________________
+	/*class Resource
+	{
+	public:
+		Resource() { std::cout << "Resource acquired\n"; }
+		~Resource() { std::cout << "Resource destroyed\n"; }
+	};*/
+
+	//int main()
+	//{
+	//	// allocate a Resource object and have it owned by std::shared_ptr
+	//	Resource* res{ new Resource };
+	//	std::shared_ptr<Resource> ptr1{ res };
+	//	{
+	//		std::shared_ptr<Resource> ptr2{ ptr1 }; // make another std::shared_ptr pointing to the same thing
+
+	//		std::cout << "Killing one shared pointer\n";
+	//	} // ptr2 goes out of scope here, but nothing happens
+
+	//	std::cout << "Killing another shared pointer\n";
+
+	//	return 0;
+	//} // ptr1 goes out of scope here, and the allocated Resource is destroyed
+
+	/*class Resource
+	{
+	public:
+		Resource() { std::cout << "Resource acquired\n"; }
+		~Resource() { std::cout << "Resource destroyed\n"; }
+	};*/
+
+	//int main()
+	//{
+	//	// allocate a Resource object and have it owned by std::shared_ptr
+	//	auto ptr1{ std::make_shared<Resource>() };
+	//	{
+	//		auto ptr2{ ptr1 }; // create ptr2 using copy of ptr1
+
+	//		std::cout << "Killing one shared pointer\n";
+	//	} // ptr2 goes out of scope here, but nothing happens
+
+	//	std::cout << "Killing another shared pointer\n";
+
+	//	return 0;
+	//} // ptr1 goes out of scope here, and the allocated Resource is destroyed
+	//Use std::make_shared() over std::shared_ptr_______________________________________
+
+	//_________________________std::weak_ptr_________________________________________________
+	class Person
+	{
+		std::string m_name;
+		std::weak_ptr<Person> m_partner; // note: This is now a std::weak_ptr
+
+	public:
+
+		Person(const std::string& name) : m_name(name)
+		{
+			std::cout << m_name << " created\n";
+		}
+		~Person()
+		{
+			std::cout << m_name << " destroyed\n";
+		}
+
+		friend bool partnerUp(std::shared_ptr<Person>& p1, std::shared_ptr<Person>& p2)
+		{
+			if (!p1 || !p2)
+				return false;
+
+			p1->m_partner = p2;
+			p2->m_partner = p1;
+
+			std::cout << p1->m_name << " is now partnered with " << p2->m_name << '\n';
+
+			return true;
+		}
+	};
+
+	/*int main()
+	{
+		auto lucy{ std::make_shared<Person>("Lucy") };
+		auto ricky{ std::make_shared<Person>("Ricky") };
+
+		partnerUp(lucy, ricky);
+
+		return 0;
+	}*/
+	// has no -> operator, need to be converted to std::unique_ptr
+	//class Person
+	//{
+	//	std::string m_name;
+	//	std::weak_ptr<Person> m_partner; // note: This is now a std::weak_ptr
+
+	//public:
+
+	//	Person(const std::string& name) : m_name(name)
+	//	{
+	//		std::cout << m_name << " created\n";
+	//	}
+	//	~Person()
+	//	{
+	//		std::cout << m_name << " destroyed\n";
+	//	}
+
+	//	friend bool partnerUp(std::shared_ptr<Person>& p1, std::shared_ptr<Person>& p2)
+	//	{
+	//		if (!p1 || !p2)
+	//			return false;
+
+	//		p1->m_partner = p2;
+	//		p2->m_partner = p1;
+
+	//		std::cout << p1->m_name << " is now partnered with " << p2->m_name << '\n';
+
+	//		return true;
+	//	}
+
+	//	std::shared_ptr<Person> getPartner() const { return m_partner.lock(); } // use lock() to convert weak_ptr to shared_ptr
+	//	const std::string& getName() const { return m_name; }
+	//};
+
+	//int main()
+	//{
+	//	auto lucy{ std::make_shared<Person>("Lucy") };
+	//	auto ricky{ std::make_shared<Person>("Ricky") };
+
+	//	partnerUp(lucy, ricky);
+
+	//	auto partner = ricky->getPartner(); // get shared_ptr to Ricky's partner
+	//	std::cout << ricky->getName() << "'s partner is: " << partner->getName() << '\n';
+
+	//	return 0;
+	//}
+
+	//class Resource
+	//{
+	//public:
+	//	Resource() { std::cerr << "Resource acquired\n"; }
+	//	~Resource() { std::cerr << "Resource destroyed\n"; }
+	//};
+
+	//// Returns a std::weak_ptr to an invalid object
+	//std::weak_ptr<Resource> getWeakPtr()
+	//{
+	//	auto ptr{ std::make_shared<Resource>() };
+	//	return std::weak_ptr<Resource>{ ptr };
+	//} // ptr goes out of scope, Resource destroyed
+
+	//// Returns a dumb pointer to an invalid object
+	//Resource* getDumbPtr()
+	//{
+	//	auto ptr{ std::make_unique<Resource>() };
+	//	return ptr.get();
+	//} // ptr goes out of scope, Resource destroyed
+
+	/*int main()
+	{
+		auto dumb{ getDumbPtr() };
+		std::cout << "Our dumb ptr is: " << ((dumb == nullptr) ? "nullptr\n" : "non-null\n");
+
+		auto weak{ getWeakPtr() };
+		std::cout << "Our weak ptr is: " << ((weak.expired()) ? "expired\n" : "valid\n");
+
+		return 0;
+	}*/
+}
+
+namespace MoveConstructor
+{
+
+	template<typename T>
+	class Auto_ptr4
+	{
+		T* m_ptr{};
+	public:
+		Auto_ptr4(T* ptr = nullptr)
+			: m_ptr{ ptr }
+		{
+		}
+
+		~Auto_ptr4()
+		{
+			delete m_ptr;
+		}
+
+		// Copy constructor
+		// Do deep copy of a.m_ptr to m_ptr
+		Auto_ptr4(const Auto_ptr4& a)
+		{
+			m_ptr = new T;
+			*m_ptr = *a.m_ptr;
+		}
+
+		// Move constructor
+		// Transfer ownership of a.m_ptr to m_ptr
+		Auto_ptr4(Auto_ptr4&& a) noexcept
+			: m_ptr{ a.m_ptr }
+		{
+			a.m_ptr = nullptr; // we'll talk more about this line below
+		}
+
+		// Copy assignment
+		// Do deep copy of a.m_ptr to m_ptr
+		Auto_ptr4& operator=(const Auto_ptr4& a)
+		{
+			// Self-assignment detection
+			if (&a == this)
+				return *this;
+
+			// Release any resource we're holding
+			delete m_ptr;
+
+			// Copy the resource
+			m_ptr = new T;
+			*m_ptr = *a.m_ptr;
+
+			return *this;
+		}
+
+		// Move assignment
+		// Transfer ownership of a.m_ptr to m_ptr
+		Auto_ptr4& operator=(Auto_ptr4&& a) noexcept
+		{
+			// Self-assignment detection
+			if (&a == this)
+				return *this;
+
+			// Release any resource we're holding
+			delete m_ptr;
+
+			// Transfer ownership of a.m_ptr to m_ptr
+			m_ptr = a.m_ptr;
+			a.m_ptr = nullptr; // we'll talk more about this line below
+
+			return *this;
+		}
+
+		T& operator*() const { return *m_ptr; }
+		T* operator->() const { return m_ptr; }
+		bool isNull() const { return m_ptr == nullptr; }
+	};
+
+	class Resource
+	{
+	public:
+		Resource() { std::cout << "Resource acquired\n"; }
+		~Resource() { std::cout << "Resource destroyed\n"; }
+	};
+
+	Auto_ptr4<Resource> generateResource()
+	{
+		Auto_ptr4<Resource> res{ new Resource };
+		return res; // this return value will invoke the move constructor
+	}
+
+	//int main()
+	//{
+	//	Auto_ptr4<Resource> mainres;
+	//	mainres = generateResource(); // this assignment will invoke the move assignment
+
+	//	return 0;
+	//}
+
+	//____________________________________ No copy semantics support_________________________________
+	template<typename T>
+	class Auto_ptr5
+	{
+		T* m_ptr{};
+	public:
+		Auto_ptr5(T* ptr = nullptr)
+			: m_ptr{ ptr }
+		{
+		}
+
+		~Auto_ptr5()
+		{
+			delete m_ptr;
+		}
+
+		// Copy constructor -- no copying allowed!
+		Auto_ptr5(const Auto_ptr5& a) = delete;
+
+		// Move constructor
+		// Transfer ownership of a.m_ptr to m_ptr
+		Auto_ptr5(Auto_ptr5&& a) noexcept
+			: m_ptr{ a.m_ptr }
+		{
+			a.m_ptr = nullptr;
+		}
+
+		// Copy assignment -- no copying allowed!
+		Auto_ptr5& operator=(const Auto_ptr5& a) = delete;
+
+		// Move assignment
+		// Transfer ownership of a.m_ptr to m_ptr
+		Auto_ptr5& operator=(Auto_ptr5&& a) noexcept
+		{
+			// Self-assignment detection
+			if (&a == this)
+				return *this;
+
+			// Release any resource we're holding
+			delete m_ptr;
+
+			// Transfer ownership of a.m_ptr to m_ptr
+			m_ptr = a.m_ptr;
+			a.m_ptr = nullptr;
+
+			return *this;
+		}
+
+		T& operator*() const { return *m_ptr; }
+		T* operator->() const { return m_ptr; }
+		bool isNull() const { return m_ptr == nullptr; }
+	};
+	//Use std::unique_ptr instead of example above(only dealt as example)
+
+	//______std::swap_____________________
+	template <typename T>
+	void mySwapCopy(T& a, T& b)
+	{
+		T tmp{ a }; // invokes copy constructor
+		a = b; // invokes copy assignment
+		b = tmp; // invokes copy assignment
+	}
+
+	/*int main()
+	{
+		std::string x{ "abc" };
+		std::string y{ "de" };
+
+		std::cout << "x: " << x << '\n';
+		std::cout << "y: " << y << '\n';
+
+		mySwapCopy(x, y);
+
+		std::cout << "x: " << x << '\n';
+		std::cout << "y: " << y << '\n';
+
+		return 0;
+	}*/
+
+	//!!!The implicit move constructor and move assignment will copy pointers, not move them. If you want to move a pointer member, you will need to define the move constructor and move assignment yourself.!!
+}
+
 
 
 

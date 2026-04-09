@@ -142,7 +142,9 @@
     <ClInclude Include="add.h" />
     <ClInclude Include="classExample.h" />
     <ClInclude Include="constants.h" />
+    <ClInclude Include="Creature.h" />
     <ClInclude Include="io.h" />
+    <ClInclude Include="Point2D.h" />
     <ClInclude Include="random.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
