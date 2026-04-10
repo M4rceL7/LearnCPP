@@ -143,6 +143,7 @@
     <ClInclude Include="classExample.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="Creature.h" />
+    <ClInclude Include="IntArray.h" />
     <ClInclude Include="io.h" />
     <ClInclude Include="Point2D.h" />
     <ClInclude Include="random.h" />
