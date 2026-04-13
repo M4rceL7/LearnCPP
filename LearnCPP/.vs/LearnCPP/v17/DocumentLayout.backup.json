@@ -3,10 +3,6 @@
   "WorkspaceRootPath": "G:\\Projects\\LearnCPP\\LearnCPP\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{936DB939-72AF-4868-AD4B-2C40CBA6E9F9}|LearnCPP.vcxproj|G:\\Projects\\LearnCPP\\LearnCPP\\IntArray.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{936DB939-72AF-4868-AD4B-2C40CBA6E9F9}|LearnCPP.vcxproj|solutionrelative:IntArray.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{936DB939-72AF-4868-AD4B-2C40CBA6E9F9}|LearnCPP.vcxproj|G:\\Projects\\LearnCPP\\LearnCPP\\LearnCPP.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{936DB939-72AF-4868-AD4B-2C40CBA6E9F9}|LearnCPP.vcxproj|solutionrelative:LearnCPP.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
@@ -18,33 +14,20 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "LearnCPP.cpp",
               "DocumentMoniker": "G:\\Projects\\LearnCPP\\LearnCPP\\LearnCPP.cpp",
               "RelativeDocumentMoniker": "LearnCPP.cpp",
               "ToolTip": "G:\\Projects\\LearnCPP\\LearnCPP\\LearnCPP.cpp",
               "RelativeToolTip": "LearnCPP.cpp",
-              "ViewState": "AgIAAF8JAAAAAAAAAAAiwHYJAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAIkJAAAAAAAAAAAiwKEJAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-10-01T15:51:10.886Z",
               "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "IntArray.h",
-              "DocumentMoniker": "G:\\Projects\\LearnCPP\\LearnCPP\\IntArray.h",
-              "RelativeDocumentMoniker": "IntArray.h",
-              "ToolTip": "G:\\Projects\\LearnCPP\\LearnCPP\\IntArray.h",
-              "RelativeToolTip": "IntArray.h",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAACQAAAAzAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-04-10T12:58:38.929Z",
               "EditorCaption": ""
             }
           ]
