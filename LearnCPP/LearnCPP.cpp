@@ -2425,11 +2425,11 @@ namespace Inheritance
 {
 	class Person
 	{
-		// In this example, we're making our members public for simplicity
-	public:
-		std::string m_name{};
+	private:
+		std::string m_name;
 		int m_age{};
 
+	public:
 		Person(std::string_view name = "", int age = 0)
 			: m_name{ name }, m_age{ age }
 		{
@@ -2439,44 +2439,361 @@ namespace Inheritance
 		int getAge() const { return m_age; }
 
 	};
-
 	// BaseballPlayer publicly inheriting Person
 	class BaseballPlayer : public Person
 	{
-	public:
+	private:
 		double m_battingAverage{};
 		int m_homeRuns{};
 
-		BaseballPlayer(double battingAverage = 0.0, int homeRuns = 0)
-			: m_battingAverage{ battingAverage }, m_homeRuns{ homeRuns }
+	public:
+		BaseballPlayer(std::string_view name = "", int age = 0,
+			double battingAverage = 0.0, int homeRuns = 0)
+			: Person{ name, age } // call Person(std::string_view, int) to initialize these fields
+			, m_battingAverage{ battingAverage }, m_homeRuns{ homeRuns }
 		{
 		}
+
+		double getBattingAverage() const { return m_battingAverage; }
+		int getHomeRuns() const { return m_homeRuns; }
 	};
 
-	// Employee publicly inherits from Person
-	class Employee : public Person
+	//// Employee publicly inherits from Person
+	//class Employee : public Person
+	//{
+	//public:
+	//	double m_hourlySalary{};
+	//	long m_employeeID{};
+
+	//	Employee(double hourlySalary = 0.0, long employeeID = 0)
+	//		: m_hourlySalary{ hourlySalary }, m_employeeID{ employeeID }
+	//	{
+	//	}
+
+	//	void printNameAndSalary() const
+	//	{
+	//		std::cout << m_name << ": " << m_hourlySalary << '\n';
+	//	}
+	//};
+
+	//class Supervisor : public Employee
+	//{
+	//public:
+	//	// This Supervisor can oversee a max of 5 employees
+	//	long m_overseesIDs[5]{};
+	//};
+
+
+	class Base
+	{
+	private: // our member is now private
+		int m_id{};
+
+	public:
+		Base(int id = 0)
+			: m_id{ id }
+		{
+		}
+
+		int getId() const { return m_id; }
+	};
+
+	class Derived : public Base
+	{
+	private: // our member is now private
+		double m_cost;
+
+	public:
+		Derived(double cost = 0.0, int id = 0)
+			: Base{ id } // Call Base(int) constructor with value id!
+			, m_cost{ cost }
+		{
+		}
+
+		double getCost() const { return m_cost; }
+	};
+
+	//int main()
+	//{
+	//	Derived derived{ 1.3, 5 }; // use Derived(double, int) constructor
+	//	std::cout << "Id: " << derived.getId() << '\n';
+	//	std::cout << "Cost: " << derived.getCost() << '\n';
+
+	//	return 0;
+	//}
+
+	class A
 	{
 	public:
-		double m_hourlySalary{};
-		long m_employeeID{};
-
-		Employee(double hourlySalary = 0.0, long employeeID = 0)
-			: m_hourlySalary{ hourlySalary }, m_employeeID{ employeeID }
+		A(int a)
 		{
-		}
-
-		void printNameAndSalary() const
-		{
-			std::cout << m_name << ": " << m_hourlySalary << '\n';
+			std::cout << "A: " << a << '\n';
 		}
 	};
 
-	class Supervisor : public Employee
+	class B : public A
 	{
 	public:
-		// This Supervisor can oversee a max of 5 employees
-		long m_overseesIDs[5]{};
+		B(int a, double b)
+			: A{ a }
+		{
+			std::cout << "B: " << b << '\n';
+		}
 	};
+
+	class C : public B
+	{
+	public:
+		C(int a, double b, char c)
+			: B{ a, b }
+		{
+			std::cout << "C: " << c << '\n';
+		}
+	};
+
+	/*int main()
+	{
+		C c{ 5, 4.3, 'R' };
+
+		return 0;
+	}*/
+
+	class Base1
+	{
+	public:
+		Base1() {}
+
+		void identify() const { std::cout << "Base::identify()\n"; }
+	};
+
+	class Derived1 : public Base1
+	{
+	public:
+		Derived1() {}
+
+		void identify() const { std::cout << "Derived::identify()\n"; }
+	};
+
+	/*int main()
+	{
+		Base1 base{};
+		base.identify();
+
+		Derived1 derived{};
+		derived.identify();
+
+		return 0;
+	}*/
+
+	class Base2
+	{
+	public:
+		Base2() {}
+
+		void identify() const { std::cout << "Base::identify()\n"; }
+	};
+
+	class Derived2 : public Base2
+	{
+	public:
+		Derived2() {}
+
+		void identify() const
+		{
+			std::cout << "Derived::identify()\n";
+			Base2::identify(); // note call to Base::identify() here
+		}
+	};
+
+	/*int main()
+	{
+		Base2 base{};
+		base.identify();
+
+		Derived2 derived{};
+		derived.identify();
+
+		return 0;
+	}*/
+
+	class Base3
+	{
+	public:
+		Base3() {}
+
+		friend std::ostream& operator<< (std::ostream& out, const Base3&)
+		{
+			out << "In Base\n";
+			return out;
+		}
+	};
+
+	class Derived3 : public Base3
+	{
+	public:
+		Derived3() {}
+
+		friend std::ostream& operator<< (std::ostream& out, const Derived3& d)
+		{
+			out << "In Derived\n";
+			// static_cast Derived to a Base object, so we call the right version of operator<<
+			out << static_cast<const Base3&>(d);
+			return out;
+		}
+	};
+
+	/*int main()
+	{
+		Derived3 derived{};
+
+		std::cout << derived << '\n';
+
+		return 0;
+	}*/
+
+	//class Base
+	//{
+	//public:
+	//	void print(int) { std::cout << "Base::print(int)\n"; }
+	//	void print(double) { std::cout << "Base::print(double)\n"; }
+	//};
+
+	//class Derived : public Base
+	//{
+	//public:
+	//	using Base::print; // make all Base::print() functions eligible for overload resolution
+	//	void print(double) { std::cout << "Derived::print(double)"; }
+	//};
+
+
+	//int main()
+	//{
+	//	Derived d{};
+	//	d.print(5); // calls Base::print(int), which is the best matching function visible in Derived
+
+	//	return 0;
+	//}
+
+
+	//class Person
+	//{
+	//private:
+	//	std::string m_name{};
+	//	int m_age{};
+
+	//public:
+	//	Person(std::string_view name, int age)
+	//		: m_name{ name }, m_age{ age }
+	//	{
+	//	}
+
+	//	const std::string& getName() const { return m_name; }
+	//	int getAge() const { return m_age; }
+	//};
+
+	//class Employee
+	//{
+	//private:
+	//	std::string m_employer{};
+	//	double m_wage{};
+
+	//public:
+	//	Employee(std::string_view employer, double wage)
+	//		: m_employer{ employer }, m_wage{ wage }
+	//	{
+	//	}
+
+	//	const std::string& getEmployer() const { return m_employer; }
+	//	double getWage() const { return m_wage; }
+	//};
+
+	//// Teacher publicly inherits Person and Employee
+	//class Teacher : public Person, public Employee
+	//{
+	//private:
+	//	int m_teachesGrade{};
+
+	//public:
+	//	Teacher(std::string_view name, int age, std::string_view employer, double wage, int teachesGrade)
+	//		: Person{ name, age }, Employee{ employer, wage }, m_teachesGrade{ teachesGrade }
+	//	{
+	//	}
+	//};
+
+	//int main()
+	//{
+	//	Teacher t{ "Mary", 45, "Boo", 14.3, 8 };
+
+	//	return 0;
+	//}
+
+	//struct Point2D
+	//{
+	//	int x{};
+	//	int y{};
+	//};
+
+	//class Box // mixin Box class
+	//{
+	//public:
+	//	void setTopLeft(Point2D point) { m_topLeft = point; }
+	//	void setBottomRight(Point2D point) { m_bottomRight = point; }
+	//private:
+	//	Point2D m_topLeft{};
+	//	Point2D m_bottomRight{};
+	//};
+
+	//class Label // mixin Label class
+	//{
+	//public:
+	//	void setText(const std::string_view str) { m_text = str; }
+	//	void setFontSize(int fontSize) { m_fontSize = fontSize; }
+	//private:
+	//	std::string m_text{};
+	//	int m_fontSize{};
+	//};
+
+	//class Tooltip // mixin Tooltip class
+	//{
+	//public:
+	//	void setText(const std::string_view str) { m_text = str; }
+	//private:
+	//	std::string m_text{};
+	//};
+
+	//class Button : public Box, public Label, public Tooltip {}; // Button using three mixins
+
+	//int main()
+	//{
+	//	Button button{};
+	//	button.Box::setTopLeft({ 1, 1 });
+	//	button.Box::setBottomRight({ 10, 10 });
+	//	button.Label::setText("Submit");
+	//	button.Label::setFontSize(6);
+	//	button.Tooltip::setText("Submit the form to the server");
+	//}
+
+	//_____________________________________________________
+	// The Curiously Recurring Template Pattern (CRTP)
+
+	//template <class T>
+	//class Mixin
+	//{
+	//	// Mixin<T> can use template type parameter T to access members of Derived
+	//	// via (static_cast<T*>(this))
+	//};
+
+	//class Derived : public Mixin<Derived>
+	//{
+	//};
+	//_________________________________________________________
+
+	
+}
+
+namespace VirtualFunctions
+{
+
 }
 
 
