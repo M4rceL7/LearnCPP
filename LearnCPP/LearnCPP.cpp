@@ -2793,6 +2793,116 @@ namespace Inheritance
 
 namespace VirtualFunctions
 {
+	class Base
+	{
+	public:
+		virtual std::string_view getName() const { return "Base"; } // note addition of virtual keyword
+	};
+
+	class Derived : public Base
+	{
+	public:
+		virtual std::string_view getName() const { return "Derived"; }
+	};
+
+	/*int main()
+	{
+		Derived derived{};
+		Base& rBase{ derived };
+		std::cout << "rBase is a " << rBase.getName() << '\n';
+
+		return 0;
+	}*/
+
+	class A
+	{
+	public:
+		virtual std::string_view getName() const { return "A"; }
+	};
+
+	class B : public A
+	{
+	public:
+		virtual std::string_view getName() const { return "B"; }
+	};
+
+	class C : public B
+	{
+	public:
+		virtual std::string_view getName() const { return "C"; }
+	};
+
+	class D : public C
+	{
+	public:
+		virtual std::string_view getName() const { return "D"; }
+	};
+
+	/*int main()
+	{
+		C c{};
+		A& rBase{ c };
+		std::cout << "rBase is a " << rBase.getName() << '\n';
+
+		return 0;
+	}*/
+
+	class Animal
+	{
+	protected:
+		std::string m_name{};
+
+		// We're making this constructor protected because
+		// we don't want people creating Animal objects directly,
+		// but we still want derived classes to be able to use it.
+		Animal(std::string_view name)
+			: m_name{ name }
+		{
+		}
+
+	public:
+		const std::string& getName() const { return m_name; }
+		virtual std::string_view speak() const { return "???"; }
+	};
+
+	class Cat : public Animal
+	{
+	public:
+		Cat(std::string_view name)
+			: Animal{ name }
+		{
+		}
+
+		virtual std::string_view speak() const { return "Meow"; }
+	};
+
+	class Dog : public Animal
+	{
+	public:
+		Dog(std::string_view name)
+			: Animal{ name }
+		{
+		}
+
+		virtual std::string_view speak() const { return "Woof"; }
+	};
+
+	void report(const Animal& animal)
+	{
+		std::cout << animal.getName() << " says " << animal.speak() << '\n';
+	}
+
+	/*int main()
+	{
+		Cat cat{ "Fred" };
+		Dog dog{ "Garbo" };
+
+		report(cat);
+		report(dog);
+
+		return 0;
+	}*/
+
 
 }
 
