@@ -2903,6 +2903,72 @@ namespace VirtualFunctions
 		return 0;
 	}*/
 
+	//class A
+	//{
+	//public:
+	//	virtual std::string_view getName1(int x) { return "A"; }
+	//	virtual std::string_view getName2(int x) { return "A"; }
+	//	virtual std::string_view getName3(int x) { return "A"; }
+	//};
+
+	//class B : public A
+	//{
+	//public:
+	//	std::string_view getName1(short int x) override { return "B"; } // compile error, function is not an override
+	//	std::string_view getName2(int x) const override { return "B"; } // compile error, function is not an override
+	//	std::string_view getName3(int x) override { return "B"; } // okay, function is an override of A::getName3(int)
+
+	//};
+
+	/*int main()
+	{
+		return 0;
+	}*/
+
+	//Use the virtual keyword on virtual functions in a base class.
+	//Use the override specifier (but not the virtual keyword) on override functions in derived classes. This includes virtual destructors.______________________
+
+	//class A
+	//{
+	//public:
+	//	virtual std::string_view getName() const { return "A"; }
+	//};
+
+	//class B : public A
+	//{
+	//public:
+	//	// note use of final specifier on following line -- that makes this function not able to be overridden in derived classes
+	//	std::string_view getName() const override final { return "B"; } // okay, overrides A::getName()
+	//};
+
+	//class C : public B
+	//{
+	//public:
+	//	std::string_view getName() const override { return "C"; } // compile error: overrides B::getName(), which is final
+	//};
+
+	//class A
+	//{
+	//public:
+	//	virtual std::string_view getName() const { return "A"; }
+	//};
+
+	//class B final : public A // note use of final specifier here
+	//{
+	//public:
+	//	std::string_view getName() const override { return "B"; }
+	//};
+
+	//class C : public B // compile error: cannot inherit from final class
+	//{
+	//public:
+	//	std::string_view getName() const override { return "C"; }
+	//};
+
+	//If you intend your class to be inherited from, make sure your destructor is virtual and public.
+	//If you do not intend your class to be inherited from, mark your class as final.
+	// This will prevent other classes from inheriting from it in the first place, without imposing any other use restrictions on the class itself.
+
 
 }
 
