@@ -2969,6 +2969,422 @@ namespace VirtualFunctions
 	//If you do not intend your class to be inherited from, mark your class as final.
 	// This will prevent other classes from inheriting from it in the first place, without imposing any other use restrictions on the class itself.
 
+	//class Base
+	//{
+	//public:
+	//	std::string_view sayHi() const { return "Hi"; } // a normal non-virtual function
+
+	//	virtual std::string_view getName() const { return "Base"; } // a normal virtual function
+
+	//	virtual int getValue() const = 0; // a pure virtual function
+
+	//	int doSomething() = 0; // Compile error: can not set non-virtual functions to 0
+	//};
+
+	class Animal // This Animal is an abstract base class
+	{
+	protected:
+		std::string m_name{};
+
+	public:
+		Animal(std::string_view name)
+			: m_name{ name }
+		{
+		}
+
+		const std::string& getName() const { return m_name; }
+		virtual std::string_view speak() const = 0; // note that speak is now a pure virtual function
+
+		virtual ~Animal() = default;
+	};
+
+	std::string_view Animal::speak() const
+	{
+		return "buzz"; // some default implementation
+	}
+
+	class Cow : public Animal
+	{
+	public:
+		Cow(std::string_view name)
+			: Animal(name)
+		{
+		}
+
+		std::string_view speak() const override { return "Moo"; }
+	};
+
+	class Dragonfly : public Animal
+	{
+
+	public:
+		Dragonfly(std::string_view name)
+			: Animal{ name }
+		{
+		}
+
+		std::string_view speak() const override// this class is no longer abstract because we defined this function
+		{
+			return Animal::speak(); // use Animal's default implementation
+		}
+	};
+
+	/*int main()
+	{
+		Cow cow{ "Betsy" };
+		std::cout << cow.getName() << " says " << cow.speak() << '\n';
+
+		Dragonfly dfly{ "Sally" };
+		std::cout << dfly.getName() << " says " << dfly.speak() << '\n';
+
+		return 0;
+	}*/
+
+	//Interface Class________________
+	class IErrorLog
+	{
+	public:
+		virtual bool openLog(std::string_view filename) = 0;
+		virtual bool closeLog() = 0;
+
+		virtual bool writeError(std::string_view errorMessage) = 0;
+
+		virtual ~IErrorLog() {} // make a virtual destructor in case we delete an IErrorLog pointer, so the proper derived destructor is called
+	};
+
+	//Diamond Problem____________________
+	/*class PoweredDevice
+	{
+	};
+
+	class Scanner : virtual public PoweredDevice
+	{
+	};
+
+	class Printer : virtual public PoweredDevice
+	{
+	};
+
+	class Copier : public Scanner, public Printer
+	{
+	};*/
+
+	class PoweredDevice
+	{
+	public:
+		PoweredDevice(int power)
+		{
+			std::cout << "PoweredDevice: " << power << '\n';
+		}
+	};
+
+	class Scanner : virtual public PoweredDevice // note: PoweredDevice is now a virtual base class
+	{
+	public:
+		Scanner(int scanner, int power)
+			: PoweredDevice{ power } // this line is required to create Scanner objects, but ignored in this case
+		{
+			std::cout << "Scanner: " << scanner << '\n';
+		}
+	};
+
+	class Printer : virtual public PoweredDevice // note: PoweredDevice is now a virtual base class
+	{
+	public:
+		Printer(int printer, int power)
+			: PoweredDevice{ power } // this line is required to create Printer objects, but ignored in this case
+		{
+			std::cout << "Printer: " << printer << '\n';
+		}
+	};
+
+	class Copier : public Scanner, public Printer
+	{
+	public:
+		Copier(int scanner, int printer, int power)
+			: PoweredDevice{ power }, // PoweredDevice is constructed here
+			Scanner{ scanner, power }, Printer{ printer, power }
+		{
+		}
+	};
+
+	//Dynamic Casting_________________
+	 
+	// class Base
+	//{
+	//protected:
+	//	int m_value{};
+
+	//public:
+	//	Base(int value)
+	//		: m_value{ value }
+	//	{
+	//	}
+
+	//	virtual ~Base() = default;
+	//};
+
+	//class Derived : public Base
+	//{
+	//protected:
+	//	std::string m_name{};
+
+	//public:
+	//	Derived(int value, std::string_view name)
+	//		: Base{ value }, m_name{ name }
+	//	{
+	//	}
+
+	//	const std::string& getName() const { return m_name; }
+	//};
+
+	//Base* getObject(bool returnDerived)
+	//{
+	//	if (returnDerived)
+	//		return new Derived{ 1, "Apple" };
+	//	else
+	//		return new Base{ 2 };
+	//}
+	
+	//int main()
+	//{
+	//	Base* b{ getObject(true) };
+
+	//	Derived* d{ dynamic_cast<Derived*>(b) }; // use dynamic cast to convert Base pointer into Derived pointer
+
+	//	if (d) // make sure d is non-null
+	//		std::cout << "The name of the Derived is: " << d->getName() << '\n';
+
+	//	delete b;
+
+	//	return 0;
+	//}
+
+	//class Base
+	//{
+	//protected:
+	//	int m_value;
+
+	//public:
+	//	Base(int value)
+	//		: m_value{ value }
+	//	{
+	//	}
+
+	//	virtual ~Base() = default;
+	//};
+
+	//class Derived : public Base
+	//{
+	//protected:
+	//	std::string m_name;
+
+	//public:
+	//	Derived(int value, std::string_view name)
+	//		: Base{ value }, m_name{ name }
+	//	{
+	//	}
+
+	//	const std::string& getName() const { return m_name; }
+	//};
+
+	//int main()
+	//{
+	//	Derived apple{ 1, "Apple" }; // create an apple
+	//	Base& b{ apple }; // set base reference to object
+	//	Derived& d{ dynamic_cast<Derived&>(b) }; // dynamic cast using a reference instead of a pointer
+
+	//	std::cout << "The name of the Derived is: " << d.getName() << '\n'; // we can access Derived::getName through d
+
+	//	return 0;
+	//}
+
+	//Operator<<´_________________
+	//class Base
+	//{
+	//public:
+	//	// Here's our overloaded operator<<
+	//	friend std::ostream& operator<<(std::ostream& out, const Base& b)
+	//	{
+	//		// Call virtual function identify() to get the string to be printed
+	//		out << b.identify();
+	//		return out;
+	//	}
+
+	//	// We'll rely on member function identify() to return the string to be printed
+	//	// Because identify() is a normal member function, it can be virtualized
+	//	virtual std::string identify() const
+	//	{
+	//		return "Base";
+	//	}
+	//};
+
+	//class Derived : public Base
+	//{
+	//public:
+	//	// Here's our override identify() function to handle the Derived case
+	//	std::string identify() const override
+	//	{
+	//		return "Derived";
+	//	}
+	//};
+
+	//int main()
+	//{
+	//	Base b{};
+	//	std::cout << b << '\n';
+
+	//	Derived d{};
+	//	std::cout << d << '\n'; // note that this works even with no operator<< that explicitly handles Derived objects
+
+	//	Base& bref{ d };
+	//	std::cout << bref << '\n';
+
+	//	return 0;
+	//}
+
+	//class Base
+	//{
+	//public:
+	//	// Here's our overloaded operator<<
+	//	friend std::ostream& operator<<(std::ostream& out, const Base& b)
+	//	{
+	//		// Delegate printing responsibility for printing to virtual member function print()
+	//		return b.print(out);
+	//	}
+
+	//	// We'll rely on member function print() to do the actual printing
+	//	// Because print() is a normal member function, it can be virtualized
+	//	virtual std::ostream& print(std::ostream& out) const
+	//	{
+	//		out << "Base";
+	//		return out;
+	//	}
+	//};
+
+	//// Some class or struct with an overloaded operator<<
+	//struct Employee
+	//{
+	//	std::string name{};
+	//	int id{};
+
+	//	friend std::ostream& operator<<(std::ostream& out, const Employee& e)
+	//	{
+	//		out << "Employee(" << e.name << ", " << e.id << ")";
+	//		return out;
+	//	}
+	//};
+
+	//class Derived : public Base
+	//{
+	//private:
+	//	Employee m_e{}; // Derived now has an Employee member
+
+	//public:
+	//	Derived(const Employee& e)
+	//		: m_e{ e }
+	//	{
+	//	}
+
+	//	// Here's our override print() function to handle the Derived case
+	//	std::ostream& print(std::ostream& out) const override
+	//	{
+	//		out << "Derived: ";
+
+	//		// Print the Employee member using the stream object
+	//		out << m_e;
+
+	//		return out;
+	//	}
+	//};
+
+	//int main()
+	//{
+	//	Base b{};
+	//	std::cout << b << '\n';
+
+	//	Derived d{ Employee{"Jim", 4} };
+	//	std::cout << d << '\n'; // note that this works even with no operator<< that explicitly handles Derived objects
+
+	//	Base& bref{ d };
+	//	std::cout << bref << '\n';
+
+	//	return 0;
+	//}
+
+	
+}
+
+namespace Exceptions
+{
+//	throw - 1; // throw a literal integer value
+//	throw ENUM_INVALID_INDEX; // throw an enum value
+//	throw "Can not take square root of negative number"; // throw a literal C-style (const char*) string
+//	throw dX; // throw a double variable that was previously defined
+//	throw MyException("Fatal Error"); // Throw an object of class MyException
+
+	//try
+	//{
+	//	// Statements that may throw exceptions you want to handle go here
+	//	throw - 1; // here's a trivial throw statement
+	//}
+	//catch (int x)
+	//{
+	//	// Handle an exception of type int here
+	//	std::cerr << "We caught an int exception with value" << x << '\n';
+	//}
+
+	//int main()
+	//{
+	//	try
+	//	{
+	//		// Statements that may throw exceptions you want to handle go here
+	//		throw - 1; // here's a trivial example
+	//	}
+	//	catch (double) // no variable name since we don't use the exception itself in the catch block below
+	//	{
+	//		// Any exceptions of type double thrown within the above try block get sent here
+	//		std::cerr << "We caught an exception of type double\n";
+	//	}
+	//	catch (int x)
+	//	{
+	//		// Any exceptions of type int thrown within the above try block get sent here
+	//		std::cerr << "We caught an int exception with value: " << x << '\n';
+	//	}
+	//	catch (const std::string&) // catch classes by const reference
+	//	{
+	//		// Any exceptions of type std::string thrown within the above try block get sent here
+	//		std::cerr << "We caught an exception of type std::string\n";
+	//	}
+
+	//	// Execution continues here after the exception has been handled by any of the above catch blocks
+	//	std::cout << "Continuing on our merry way\n";
+
+	//	return 0;
+	//}
+
+
+	//int main()
+	//{
+	//	std::cout << "Enter a number: ";
+	//	double x{};
+	//	std::cin >> x;
+
+	//	try // Look for exceptions that occur within try block and route to attached catch block(s)
+	//	{
+	//		// If the user entered a negative number, this is an error condition
+	//		if (x < 0.0)
+	//			throw "Can not take sqrt of negative number"; // throw exception of type const char*
+
+	//		// Otherwise, print the answer
+	//		std::cout << "The sqrt of " << x << " is " << std::sqrt(x) << '\n';
+	//	}
+	//	catch (const char* exception) // catch exceptions of type const char*
+	//	{
+	//		std::cerr << "Error: " << exception << '\n';
+	//	}
+	//}
+
 
 }
 
