@@ -22,6 +22,7 @@
 #include <array>
 #include <functional>
 #include <memory>
+#include <exception>
 
 
 using namespace std::string_literals;		//s suffix
@@ -3385,7 +3386,582 @@ namespace Exceptions
 	//	}
 	//}
 
+	//double mySqrt(double x)
+	//{
+	//	// If the user entered a negative number, this is an error condition
+	//	if (x < 0.0)
+	//		throw "Can not take sqrt of negative number"; // throw exception of type const char*
 
+	//	return std::sqrt(x);
+	//}
+
+	//int main()
+	//{
+	//	std::cout << "Enter a number: ";
+	//	double x{};
+	//	std::cin >> x;
+
+	//	try // Look for exceptions that occur within try block and route to attached catch block(s)
+	//	{
+	//		double d = mySqrt(x);
+	//		std::cout << "The sqrt of " << x << " is " << d << '\n';
+	//	}
+	//	catch (const char* exception) // catch exceptions of type const char*
+	//	{
+	//		std::cerr << "Error: " << exception << std::endl;
+	//	}
+
+	//	return 0;
+	//}
+
+	void D() // called by C()
+	{
+		std::cout << "Start D\n";
+		std::cout << "D throwing int exception\n";
+
+		throw - 1;
+
+		std::cout << "End D\n"; // skipped over
+	}
+
+	void C() // called by B()
+	{
+		std::cout << "Start C\n";
+		D();
+		std::cout << "End C\n";
+	}
+
+	void B() // called by A()
+	{
+		std::cout << "Start B\n";
+
+		try
+		{
+			C();
+		}
+		catch (double) // not caught: exception type mismatch
+		{
+			std::cerr << "B caught double exception\n";
+		}
+
+		try
+		{
+		}
+		catch (int) // not caught: exception not thrown within try
+		{
+			std::cerr << "B caught int exception\n";
+		}
+
+		std::cout << "End B\n";
+	}
+
+	void A() // called by main()
+	{
+		std::cout << "Start A\n";
+
+		try
+		{
+			B();
+		}
+		catch (int) // exception caught here and handled
+		{
+			std::cerr << "A caught int exception\n";
+		}
+		catch (double) // not called because exception was handled by prior catch block
+		{
+			std::cerr << "A caught double exception\n";
+		}
+
+		// execution continues here after the exception is handled
+		std::cout << "End A\n";
+	}
+
+	//int main()
+	//{
+	//	std::cout << "Start main\n";
+
+	//	try
+	//	{
+	//		A();
+	//	}
+	//	catch (int) // not called because exception was handled by A
+	//	{
+	//		std::cerr << "main caught int exception\n";
+	//	}
+	//	std::cout << "End main\n";
+
+	//	return 0;
+	//}
+
+	//int main()
+	//{
+	//	try
+	//	{
+	//		throw 5; // throw an int exception
+	//	}
+	//	catch (double x)
+	//	{
+	//		std::cout << "We caught an exception of type double: " << x << '\n';
+	//	}
+	//	catch (...) // catch-all handler
+	//	{
+	//		std::cout << "We caught an exception of an undetermined type\n";
+	//	}
+	//}
+
+	//struct GameSession
+	//{
+	//	// Game session data here
+	//};
+
+	//void runGame(GameSession&)
+	//{
+	//	throw 1;
+	//}
+
+	//void saveGame(GameSession&)
+	//{
+	//	// Save user's game here
+	//}
+
+	//int main()
+	//{
+	//	GameSession session{};
+
+	//	try
+	//	{
+	//		runGame(session);
+	//	}
+	//	catch (...)
+	//	{
+	//		std::cerr << "Abnormal termination\n";
+	//	}
+
+	//	saveGame(session); // save the user's game (even if catch-all handler was hit)
+
+	//	return 0;
+	//}
+
+	//struct GameSession
+	//{
+	//	// Game session data here
+	//};
+
+	//void runGame(GameSession&)
+	//{
+	//	throw 1;
+	//}
+
+	//void saveGame(GameSession&)
+	//{
+	//	// Save user's game here
+	//}
+
+	//class DummyException // a dummy class that can't be instantiated
+	//{
+	//	DummyException() = delete;
+	//};
+
+	//int main()
+	//{
+	//	GameSession session{};
+
+	//	try
+	//	{
+	//		runGame(session);
+	//	}
+	//#ifndef NDEBUG // if we're in release node
+	//	catch (...) // compile in the catch-all handler
+	//	{
+	//		std::cerr << "Abnormal termination\n";
+	//	}
+	//#else // in debug mode, compile in a catch that will never be hit (for syntactic reasons)
+	//	catch (DummyException)
+	//	{
+	//	}
+	//#endif
+
+	//	saveGame(session); // save the user's game (even if catch-all handler was hit)
+
+	//	return 0;
+	//}
+	
+	//class Member
+	//{
+	//public:
+	//	Member()
+	//	{
+	//		std::cerr << "Member allocated some resources\n";
+	//	}
+
+	//	~Member()
+	//	{
+	//		std::cerr << "Member cleaned up\n";
+	//	}
+	//};
+
+	//class A
+	//{
+	//private:
+	//	int m_x{};
+	//	Member m_member;
+
+	//public:
+	//	A(int x) : m_x{ x }
+	//	{
+	//		if (x <= 0)
+	//			throw 1;
+	//	}
+
+	//	~A()
+	//	{
+	//		std::cerr << "~A\n"; // should not be called
+	//	}
+	//};
+
+
+	//int main()
+	//{
+	//	try
+	//	{
+	//		A a{ 0 };
+	//	}
+	//	catch (int)
+	//	{
+	//		std::cerr << "Oops\n";
+	//	}
+
+	//	return 0;
+	//}
+
+	//class ArrayException
+	//{
+	//private:
+	//	std::string m_error;
+
+	//public:
+	//	ArrayException(std::string_view error)
+	//		: m_error{ error }
+	//	{
+	//	}
+
+	//	const std::string& getError() const { return m_error; }
+	//};
+
+	//class IntArray
+	//{
+	//private:
+	//	int m_data[3]{}; // assume array is length 3 for simplicity
+
+	//public:
+	//	IntArray() {}
+
+	//	int getLength() const { return 3; }
+
+	//	int& operator[](const int index)
+	//	{
+	//		if (index < 0 || index >= getLength())
+	//			throw ArrayException{ "Invalid index" };
+
+	//		return m_data[index];
+	//	}
+
+	//};
+
+	//int main()
+	//{
+	//	IntArray array;
+
+	//	try
+	//	{
+	//		int value{ array[5] }; // out of range subscript
+	//	}
+	//	catch (const ArrayException& exception)
+	//	{
+	//		std::cerr << "An array exception occurred (" << exception.getError() << ")\n";
+	//	}
+	//}
+
+	//int main()
+	//{
+	//	try
+	//	{
+	//		// Your code using standard library goes here
+	//		// We'll trigger one of these exceptions intentionally for the sake of the example
+	//		std::string s;
+	//		s.resize(std::numeric_limits<std::size_t>::max()); // will trigger a std::length_error or allocation exception
+	//	}
+	//	// This handler will catch std::exception and all the derived exceptions too
+	//	catch (const std::exception& exception)
+	//	{
+	//		std::cerr << "Standard exception: " << exception.what() << '\n';
+	//	}
+
+	//	return 0;
+	//}
+
+	//class ArrayException : public std::exception
+	//{
+	//private:
+	//	std::string m_error{}; // handle our own string
+
+	//public:
+	//	ArrayException(std::string_view error)
+	//		: m_error{ error }
+	//	{
+	//	}
+
+	//	// std::exception::what() returns a const char*, so we must as well
+	//	const char* what() const noexcept override { return m_error.c_str(); }
+	//};
+
+	//class IntArray
+	//{
+	//private:
+	//	int m_data[3]{}; // assume array is length 3 for simplicity
+
+	//public:
+	//	IntArray() {}
+
+	//	int getLength() const { return 3; }
+
+	//	int& operator[](const int index)
+	//	{
+	//		if (index < 0 || index >= getLength())
+	//			throw ArrayException("Invalid index");
+
+	//		return m_data[index];
+	//	}
+
+	//};
+
+	//int main()
+	//{
+	//	IntArray array;
+
+	//	try
+	//	{
+	//		int value{ array[5] };
+	//	}
+	//	catch (const ArrayException& exception) // derived catch blocks go first
+	//	{
+	//		std::cerr << "An array exception occurred (" << exception.what() << ")\n";
+	//	}
+	//	catch (const std::exception& exception)
+	//	{
+	//		std::cerr << "Some other std::exception occurred (" << exception.what() << ")\n";
+	//	}
+	//}
+
+	//class A
+	//{
+	//private:
+	//	int m_x;
+	//public:
+	//	A(int x) : m_x{ x }
+	//	{
+	//		if (x <= 0)
+	//			throw 1; // Exception thrown here
+	//	}
+	//};
+
+	//class B : public A
+	//{
+	//public:
+	//	B(int x) try : A{ x } // note addition of try keyword here
+	//	{
+	//	}
+	//	catch (...) // note this is at same level of indentation as the function itself
+	//	{
+	//		// Exceptions from member initializer list or
+	//		// from constructor body are caught here
+
+	//		std::cerr << "Exception caught\n";
+
+	//		throw; // rethrow the existing exception
+	//	}
+	//};
+
+	//int main()
+	//{
+	//	try
+	//	{
+	//		B b{ 0 };
+	//	}
+	//	catch (int)
+	//	{
+	//		std::cout << "Oops\n";
+	//	}
+	//}
+
+	//class Doomed
+	//{
+	//public:
+	//	~Doomed()
+	//	{
+	//		std::cout << "Doomed destructed\n";
+	//	}
+	//};
+
+	//void thrower()
+	//{
+	//	std::cout << "Throwing exception\n";
+	//	throw 1;
+	//}
+
+	//void pt()
+	//{
+	//	std::cout << "pt (potentally throwing) called\n";
+	//	//This object will be destroyed during stack unwinding (if it occurs)
+	//	Doomed doomed{};
+	//	thrower();
+	//	std::cout << "This never prints\n";
+	//}
+
+	//void nt() noexcept
+	//{
+	//	std::cout << "nt (noexcept) called\n";
+	//	//This object will be destroyed during stack unwinding (if it occurs)
+	//	Doomed doomed{};
+	//	thrower();
+	//	std::cout << "this never prints\n";
+	//}
+
+	//void tester(int c) noexcept
+	//{
+	//	std::cout << "tester (noexcept) case " << c << " called\n";
+	//	try
+	//	{
+	//		(c == 1) ? pt() : nt();
+	//	}
+	//	catch (...)
+	//	{
+	//		std::cout << "tester caught exception\n";
+	//	}
+	//}
+
+	//int main()
+	//{
+	//	std::cout << std::unitbuf; // flush buffer after each insertion
+	//	std::cout << std::boolalpha; // print boolean as true/false
+	//	tester(1);
+	//	std::cout << "Test successful\n\n";
+	//	tester(2);
+	//	std::cout << "Test successful\n";
+
+	//	return 0;
+	//}
+
+	//class MoveClass
+	//{
+	//private:
+	//	int* m_resource{};
+
+	//public:
+	//	MoveClass() = default;
+
+	//	MoveClass(int resource)
+	//		: m_resource{ new int{ resource } }
+	//	{
+	//	}
+
+	//	// Copy constructor
+	//	MoveClass(const MoveClass& that)
+	//	{
+	//		// deep copy
+	//		if (that.m_resource != nullptr)
+	//		{
+	//			m_resource = new int{ *that.m_resource };
+	//		}
+	//	}
+
+	//	// Move constructor
+	//	MoveClass(MoveClass&& that) noexcept
+	//		: m_resource{ that.m_resource }
+	//	{
+	//		that.m_resource = nullptr;
+	//	}
+
+	//	~MoveClass()
+	//	{
+	//		std::cout << "destroying " << *this << '\n';
+
+	//		delete m_resource;
+	//	}
+
+	//	friend std::ostream& operator<<(std::ostream& out, const MoveClass& moveClass)
+	//	{
+	//		out << "MoveClass(";
+
+	//		if (moveClass.m_resource == nullptr)
+	//		{
+	//			out << "empty";
+	//		}
+	//		else
+	//		{
+	//			out << *moveClass.m_resource;
+	//		}
+
+	//		out << ')';
+
+	//		return out;
+	//	}
+	//};
+
+
+	//class CopyClass
+	//{
+	//public:
+	//	bool m_throw{};
+
+	//	CopyClass() = default;
+
+	//	// Copy constructor throws an exception when copying from
+	//	// a CopyClass object where its m_throw is 'true'
+	//	CopyClass(const CopyClass& that)
+	//		: m_throw{ that.m_throw }
+	//	{
+	//		if (m_throw)
+	//		{
+	//			throw std::runtime_error{ "abort!" };
+	//		}
+	//	}
+	//};
+
+	//int main()
+	//{
+	//	// We can make a std::pair without any problems:
+	//	std::pair my_pair{ MoveClass{ 13 }, CopyClass{} };
+
+	//	std::cout << "my_pair.first: " << my_pair.first << '\n';
+
+	//	// But the problem arises when we try to move that pair into another pair.
+	//	try
+	//	{
+	//		my_pair.second.m_throw = true; // To trigger copy constructor exception
+
+	//		// The following line will throw an exception
+	//		//std::pair moved_pair{ std::move(my_pair) };
+	//		std::pair moved_pair{ std::move_if_noexcept(my_pair) }; 
+
+	//		std::cout << "moved pair exists\n"; // Never prints
+	//	}
+	//	catch (const std::exception& ex)
+	//	{
+	//		std::cerr << "Error found: " << ex.what() << '\n';
+	//	}
+
+	//	std::cout << "my_pair.first: " << my_pair.first << '\n';
+
+	//	return 0;
+	//}
+
+//Exception handling is best used when all of the following are true:
+//
+//The error being handled is likely to occur only infrequently.
+//The error is serious and execution could not continue otherwise.
+//The error cannot be handled at the place where it occurs.
+//There isn’t a good alternative way to return an error code back to the caller.
 }
 
 
