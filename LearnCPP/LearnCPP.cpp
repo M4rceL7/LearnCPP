@@ -3942,7 +3942,7 @@ namespace Exceptions
 
 	//		// The following line will throw an exception
 	//		//std::pair moved_pair{ std::move(my_pair) };
-	//		std::pair moved_pair{ std::move_if_noexcept(my_pair) }; 
+	//		std::pair moved_pair{ std::move_if_noexcept(my_pair) };  
 
 	//		std::cout << "moved pair exists\n"; // Never prints
 	//	}

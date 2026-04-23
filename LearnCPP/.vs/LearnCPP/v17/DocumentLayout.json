@@ -3,6 +3,9 @@
   "WorkspaceRootPath": "G:\\Projects\\LearnCPP\\LearnCPP\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{B51B76A8-A404-4201-938E-BC3D4A912846}|..\\ExerciseCollection\\ExerciseCollection.vcxproj|G:\\Projects\\LearnCPP\\ExerciseCollection\\Main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{936DB939-72AF-4868-AD4B-2C40CBA6E9F9}|LearnCPP.vcxproj|G:\\Projects\\LearnCPP\\LearnCPP\\LearnCPP.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{936DB939-72AF-4868-AD4B-2C40CBA6E9F9}|LearnCPP.vcxproj|solutionrelative:LearnCPP.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
@@ -14,20 +17,33 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "LearnCPP.cpp",
               "DocumentMoniker": "G:\\Projects\\LearnCPP\\LearnCPP\\LearnCPP.cpp",
               "RelativeDocumentMoniker": "LearnCPP.cpp",
               "ToolTip": "G:\\Projects\\LearnCPP\\LearnCPP\\LearnCPP.cpp",
               "RelativeToolTip": "LearnCPP.cpp",
-              "ViewState": "AgIAAFMPAAAAAAAAAAAAAGgPAAA9AAAAAAAAAA==",
+              "ViewState": "AgIAAE0PAAAAAAAAAAAiwGIPAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-10-01T15:51:10.886Z",
               "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Main.cpp",
+              "DocumentMoniker": "G:\\Projects\\LearnCPP\\ExerciseCollection\\Main.cpp",
+              "RelativeDocumentMoniker": "..\\ExerciseCollection\\Main.cpp",
+              "ToolTip": "G:\\Projects\\LearnCPP\\ExerciseCollection\\Main.cpp",
+              "RelativeToolTip": "..\\ExerciseCollection\\Main.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-04-23T14:01:34.637Z",
               "EditorCaption": ""
             }
           ]
