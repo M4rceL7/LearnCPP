@@ -1,2 +1,20 @@
 ﻿  LearnCPP.cpp
-  LearnCPP.vcxproj -> G:\Projects\LearnCPP\LearnCPP\x64\Debug\LearnCPP.exe
+G:\Projects\LearnCPP\LearnCPP\LearnCPP.cpp(2985,8): error C2011: 'VirtualFunctions::Animal': 'class' type redefinition
+      G:\Projects\LearnCPP\LearnCPP\LearnCPP.cpp(2851,8):
+      see declaration of 'VirtualFunctions::Animal'
+  
+G:\Projects\LearnCPP\LearnCPP\LearnCPP.cpp(3002,27): error C2027: use of undefined type 'VirtualFunctions::Animal'
+      G:\Projects\LearnCPP\LearnCPP\LearnCPP.cpp(2851,8):
+      see declaration of 'VirtualFunctions::Animal'
+  
+G:\Projects\LearnCPP\LearnCPP\LearnCPP.cpp(3002,27): error C2270: 'speak': modifiers not allowed on nonmember functions
+G:\Projects\LearnCPP\LearnCPP\LearnCPP.cpp(3007,21): error C2504: 'VirtualFunctions::Animal': base class undefined
+G:\Projects\LearnCPP\LearnCPP\LearnCPP.cpp(3015,20): error C3668: 'VirtualFunctions::Cow::speak': method with override specifier 'override' did not override any base class methods
+G:\Projects\LearnCPP\LearnCPP\LearnCPP.cpp(3011,6): error C2614: 'VirtualFunctions::Cow': illegal member initialization: 'Animal' is not a base or member
+G:\Projects\LearnCPP\LearnCPP\LearnCPP.cpp(3018,27): error C2504: 'VirtualFunctions::Animal': base class undefined
+G:\Projects\LearnCPP\LearnCPP\LearnCPP.cpp(3027,20): error C3668: 'VirtualFunctions::Dragonfly::speak': method with override specifier 'override' did not override any base class methods
+G:\Projects\LearnCPP\LearnCPP\LearnCPP.cpp(3023,6): error C2614: 'VirtualFunctions::Dragonfly': illegal member initialization: 'Animal' is not a base or member
+G:\Projects\LearnCPP\LearnCPP\LearnCPP.cpp(3029,19): error C2027: use of undefined type 'VirtualFunctions::Animal'
+      G:\Projects\LearnCPP\LearnCPP\LearnCPP.cpp(2851,8):
+      see declaration of 'VirtualFunctions::Animal'
+  

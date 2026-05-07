@@ -30,8 +30,7 @@
               "ViewState": "AgIAAE0PAAAAAAAAAAAiwGIPAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-10-01T15:51:10.886Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -41,7 +40,7 @@
               "RelativeDocumentMoniker": "..\\ExerciseCollection\\Main.cpp",
               "ToolTip": "G:\\Projects\\LearnCPP\\ExerciseCollection\\Main.cpp",
               "RelativeToolTip": "..\\ExerciseCollection\\Main.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAArAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-04-23T14:01:34.637Z",
               "EditorCaption": ""
