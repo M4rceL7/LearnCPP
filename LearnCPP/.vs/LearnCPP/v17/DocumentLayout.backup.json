@@ -6,8 +6,10 @@
       "AbsoluteMoniker": "D:0:0:{B51B76A8-A404-4201-938E-BC3D4A912846}|..\\ExerciseCollection\\ExerciseCollection.vcxproj|G:\\Projects\\LearnCPP\\ExerciseCollection\\Main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{936DB939-72AF-4868-AD4B-2C40CBA6E9F9}|LearnCPP.vcxproj|G:\\Projects\\LearnCPP\\LearnCPP\\LearnCPP.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{936DB939-72AF-4868-AD4B-2C40CBA6E9F9}|LearnCPP.vcxproj|solutionrelative:LearnCPP.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{B51B76A8-A404-4201-938E-BC3D4A912846}|..\\ExerciseCollection\\ExerciseCollection.vcxproj|G:\\Projects\\LearnCPP\\ExerciseCollection\\io.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B51B76A8-A404-4201-938E-BC3D4A912846}|..\\ExerciseCollection\\ExerciseCollection.vcxproj|G:\\Projects\\LearnCPP\\ExerciseCollection\\io.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -17,20 +19,33 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "LearnCPP.cpp",
-              "DocumentMoniker": "G:\\Projects\\LearnCPP\\LearnCPP\\LearnCPP.cpp",
-              "RelativeDocumentMoniker": "LearnCPP.cpp",
-              "ToolTip": "G:\\Projects\\LearnCPP\\LearnCPP\\LearnCPP.cpp",
-              "RelativeToolTip": "LearnCPP.cpp",
-              "ViewState": "AgIAAE0PAAAAAAAAAAAiwGIPAAAHAAAAAAAAAA==",
+              "Title": "io.cpp",
+              "DocumentMoniker": "G:\\Projects\\LearnCPP\\ExerciseCollection\\io.cpp",
+              "RelativeDocumentMoniker": "..\\ExerciseCollection\\io.cpp",
+              "ToolTip": "G:\\Projects\\LearnCPP\\ExerciseCollection\\io.cpp",
+              "RelativeToolTip": "..\\ExerciseCollection\\io.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-10-01T15:51:10.886Z",
-              "IsPinned": true
+              "WhenOpened": "2026-05-09T13:21:59.992Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "io.h",
+              "DocumentMoniker": "G:\\Projects\\LearnCPP\\ExerciseCollection\\io.h",
+              "RelativeDocumentMoniker": "..\\ExerciseCollection\\io.h",
+              "ToolTip": "G:\\Projects\\LearnCPP\\ExerciseCollection\\io.h",
+              "RelativeToolTip": "..\\ExerciseCollection\\io.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-05-09T13:21:43.769Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -40,7 +55,7 @@
               "RelativeDocumentMoniker": "..\\ExerciseCollection\\Main.cpp",
               "ToolTip": "G:\\Projects\\LearnCPP\\ExerciseCollection\\Main.cpp",
               "RelativeToolTip": "..\\ExerciseCollection\\Main.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAACwAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-04-23T14:01:34.637Z",
               "EditorCaption": ""
